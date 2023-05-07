@@ -51,7 +51,8 @@ export const DataProvider = ({children}) => {
     loginErr: loginErr,
     user: user,
     logoutUser: logoutUser,
-    authToken: authToken
+    authToken: authToken,
+    setLoginErr: setLoginErr,
   }
   return (
     <DataContext.Provider value={contextData}>{children}</DataContext.Provider>

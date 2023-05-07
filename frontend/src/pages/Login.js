@@ -14,8 +14,8 @@ export default function LoginPage({toggle}) {
   return(
     <Flex direction="column">
       <Box h={[61]} >
-        <Text fontSize="24px" color="grey" as="b">Welcome back!</Text>
-        <Text fontSize="16px">Please enter login credentials</Text>
+        <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">Welcome back!</Text>
+        <Text fontSize="16px" fontWeight="500">Please enter login credentials</Text>
       </Box>
       <Box h={[300]} w={[500]} pt="4px">
       <form onSubmit={userLogin}>
@@ -24,12 +24,12 @@ export default function LoginPage({toggle}) {
             <Flex direction="column">
               {loginErr && (
                 <FormErrorMessage>
-                  Username/ Password invalid
+                  <Text  fontSize="16px" fontWeight="500">Username/ Password invalid</Text>
                 </FormErrorMessage>
               )}
               <FormLabel fontSize="14px">Username</FormLabel>
               <Input
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="text"
                 name="username"
                 id="username"
@@ -40,7 +40,7 @@ export default function LoginPage({toggle}) {
               <FormLabel fontSize="14px">Password</FormLabel>
               <Input
                 //   bg="#fae0de"
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="password"
                 name="password"
                 id="password"
@@ -61,7 +61,7 @@ export default function LoginPage({toggle}) {
           </Button>
         </Flex>
       </form>
-      <Text fontSize="12px">
+      <Text fontSize="12px" fontWeight="500">
         Don't have an account? 
         <Link onClick={()=>toggle("register")}>
           <span style={{ color: "blue" }}> Sign Up</span>

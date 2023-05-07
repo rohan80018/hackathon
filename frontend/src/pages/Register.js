@@ -61,10 +61,10 @@ export default function Register({toggle}) {
   return (
     <Flex direction="column" justify="center">
     <Box h={[61]} >
-      <Text fontSize="24px" color="grey" as="b">Welcome </Text>
-      <Text fontSize="16px">Please enter your details.</Text>
+      <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">Welcome </Text>
+      <Text fontSize="16px" fontWeight='500'>Please enter your details.</Text>
     </Box>
-    <Box h={[300]} w={[500]} pt="4px">
+    <Box h={[420]} w={[500]} pt="4px">
     <form onSubmit={handleSubmit}>
       <Flex direction="column">
         {/* <FormControl isInvalid={Object.keys(err).length}> */}
@@ -78,7 +78,7 @@ export default function Register({toggle}) {
                 </FormErrorMessage>
               )}
               <Input
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="text"
                 name="username"
                 id="username"
@@ -96,7 +96,7 @@ export default function Register({toggle}) {
                 </FormErrorMessage>
               )}
               <Input
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="email"
                 name="email"
                 id="email"
@@ -115,7 +115,7 @@ export default function Register({toggle}) {
               )}
               <Input
                 //   bg="#fae0de"
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="password"
                 name="password"
                 id="password"
@@ -134,7 +134,7 @@ export default function Register({toggle}) {
               )}
               <Input
                 //   bg="#fae0de"
-                bg="#f0f0f0"
+                bg="#ffeac9"
                 type="password"
                 name="confirm"
                 id="confirm"
@@ -156,7 +156,7 @@ export default function Register({toggle}) {
         </Button>
       </Flex>
     </form>
-    <Text fontSize="12px">
+    <Text fontSize="12px" fontWeight="500">
       Already have an account? 
       <Link onClick={()=>toggle("login")}>
         <span style={{ color: "blue" }}> Log In</span>
