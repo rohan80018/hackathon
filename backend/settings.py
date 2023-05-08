@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     'djoser',
+    "debug_toolbar",
 
     "rest_framework_simplejwt.token_blacklist",
 
@@ -52,6 +53,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
+
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.UserCreateSerializer',
+        'current_user': 'api.serializers.UserSerializer'
+    }
 }
 
 SIMPLE_JWT = {
@@ -98,6 +106,8 @@ SIMPLE_JWT = {
 #    'AUTH_HEADER_TYPES': ('JWT',),
 # }
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 

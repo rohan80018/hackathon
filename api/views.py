@@ -28,13 +28,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(["GET"])
 def submissions(request):
-  data = Submissions.objects.all()
+  data = Submissions.objects.select_related('user').all()
   serial = SubSerializer(data, many = True)
   return Response(serial.data, status=200)
 
 
 @api_view(["POST"])
-def sub_create(request):
+def sub_create(request, pk):
   post_data = request.data
   serial = SubSerializer(data = post_data)
   serial.is_valid(raise_exception=True)
@@ -55,6 +55,6 @@ def sub_detail(request,pk):
 
   elif request.method == "DELETE":
     pass
-  data = Submissions.objects.get(id=pk)
+  data = Submissions.objects.select_related('user').get(id=pk)
   serial = SubSerializer(data)
   return Response(serial.data,status=200)
