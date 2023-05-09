@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Submissions
-from .serializer import SubSerializer
+from .serializer import SubSerializer, SubmissionDetail
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -8,6 +8,7 @@ from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from rest_framework.generics import ListCreateAPIView
+from rest_framework.views import APIView
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -62,9 +63,21 @@ def sub_detail(request,pk):
   return Response(serial.data,status=200)
 
 
-class SubmissionList(ListCreateAPIView):
-  def get_queryset(self):
-    return Submissions.objects.select_related('user').all()
+class SubmissionList(APIView):
+  # def get_queryset(self):
+  #   return Submissions.objects.select_related('user').all()
   
-  def get_serializer_class(self):
-    return SubSerializer
+  # def get_serializer_class(self):
+  #   return SubSerializer
+  def get(self, request):
+    query = Submissions.objects.select_related('user').all()
+    serializer = SubmissionDetail(query, many=True)
+    return Response(serializer.data)
+  
+  def post(self, request):
+    serializer = SubSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    query = Submissions.objects.select_related('user').all()
+    serial = SubmissionDetail(query, many=True)
+    return Response(serial.data, status = 201)
