@@ -86,25 +86,25 @@ class SubmissionList(APIView):
 class SubDetail(APIView):
   def get(self,request,pk):
     query = Submissions.objects.select_related('user').prefetch_related('post').get(id=pk)
-    print(query)
     serializer = SubmissionDetailSerializer(query)
     return Response(serializer.data)
 
   def post(self,request,pk):
     user_id = request.data["user_liked"]
     submission_id = request.data["submission"]
-    if FavPosts.objects.filter(submission=submission_id, user_liked=user_id):
-      query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
+    query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
+    if query:
+      # query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
       query.delete()
-      query = Submissions.objects.select_related('user').get(id=pk)
-      serializer =SubmissionDetailSerializer(query)
+      query_data = Submissions.objects.select_related('user').get(id=pk)
+      serializer =SubmissionDetailSerializer(query_data)
       return Response(serializer.data)
-    query = FavSerializer(data = request.data)
-    query.is_valid(raise_exception=True)
-    query.save()
-    query = Submissions.objects.select_related('user').get(id=pk)
-    serializer = SubmissionDetailSerializer(query)
-    return Response(serializer.data)
+    serializer = FavSerializer(data = request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    query_data = Submissions.objects.select_related('user').get(id=pk)
+    serial = SubmissionDetailSerializer(query_data)
+    return Response(serial.data)
 
 
 # not needed
