@@ -13,7 +13,12 @@ class UserSerializer(BaseUserSerializer):
     fields = ["id", "username", "email"]
 
 class SubSerializer(serializers.ModelSerializer):
-  user = UserSerializer()
   class Meta:
     model = Submissions
-    fields = ["id", "user", "title", "summary", "description", "image", "name", "create_at", "git_link", "other_link"]
+    fields = ["id",'user', "title", "summary", "description", "image", "name", "create_at", "git_link", "other_link"]
+
+class SubmissionDetail(serializers.ModelSerializer):
+  user = UserSerializer(read_only=True)
+  class Meta:
+    model = Submissions
+    fields = ["id", 'user',"title", "summary","description", "image", 'name', 'create_at', 'git_link', "other_link"]

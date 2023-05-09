@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 
+from rest_framework.generics import ListCreateAPIView
+
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -58,3 +60,11 @@ def sub_detail(request,pk):
   data = Submissions.objects.select_related('user').get(id=pk)
   serial = SubSerializer(data)
   return Response(serial.data,status=200)
+
+
+class SubmissionList(ListCreateAPIView):
+  def get_queryset(self):
+    return Submissions.objects.select_related('user').all()
+  
+  def get_serializer_class(self):
+    return SubSerializer
