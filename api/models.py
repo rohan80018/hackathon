@@ -25,6 +25,6 @@ class Submissions(models.Model):
   git_link = models.URLField()
   other_link = models.URLField()
 
-class Fav_Posts(models.Model):
-  submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)
-  user_liked = models.ForeignKey(User, on_delete=models.CASCADE)
+class FavPosts(models.Model):
+  submission = models.ForeignKey(Submissions, on_delete=models.CASCADE, related_name="post")
+  user_liked = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
