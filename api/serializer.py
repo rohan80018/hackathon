@@ -20,17 +20,23 @@ class SubSerializer(serializers.ModelSerializer):
     model = Submissions
     fields = ["id",'user', "title", "summary", "description", "image", "name", "create_at", "git_link", "other_link" ]
     
-class SubmissionDetailSerializer(serializers.ModelSerializer):
-  user = UserSerializer(read_only=True)
-  class Meta:
-    model = Submissions
-    fields = ["id", 'user',"title", "summary","description", "image", 'name', 'create_at', 'git_link', "other_link"]
 
+    
 class FavSerializer(serializers.ModelSerializer):
   class Meta:
     model = FavPosts
     fields = ["id", "submission", "user_liked"]
 
+
+class SubmissionDetailSerializer(serializers.ModelSerializer):
+  user = UserSerializer(read_only=True)
+  post= FavSerializer(many=True, read_only=False)
+  class Meta:
+    model = Submissions
+    fields = ["id", 'user',"title", "summary","description", "image", 'name', 'create_at', 'git_link', "other_link", "post"]
+
+
+# not required now
 class SubDetailSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   post = FavSerializer(many=True, read_only=False)

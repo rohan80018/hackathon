@@ -71,7 +71,7 @@ class SubmissionList(APIView):
   # def get_serializer_class(self):
   #   return SubSerializer
   def get(self, request):
-    query = Submissions.objects.select_related('user').all()
+    query = Submissions.objects.select_related('user').prefetch_related('post').all()
     serializer = SubmissionDetailSerializer(query, many=True)
     return Response(serializer.data)
   
@@ -87,7 +87,7 @@ class SubDetail(APIView):
   def get(self,request,pk):
     query = Submissions.objects.select_related('user').prefetch_related('post').get(id=pk)
     print(query)
-    serializer = SubDetailSerializer(query)
+    serializer = SubmissionDetailSerializer(query)
     return Response(serializer.data)
 
   def post(self,request,pk):
@@ -97,13 +97,13 @@ class SubDetail(APIView):
       query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
       query.delete()
       query = Submissions.objects.select_related('user').get(id=pk)
-      serializer = SubDetailSerializer(query)
+      serializer =SubmissionDetailSerializer(query)
       return Response(serializer.data)
     query = FavSerializer(data = request.data)
     query.is_valid(raise_exception=True)
     query.save()
     query = Submissions.objects.select_related('user').get(id=pk)
-    serializer = SubDetailSerializer(query)
+    serializer = SubmissionDetailSerializer(query)
     return Response(serializer.data)
 
 
