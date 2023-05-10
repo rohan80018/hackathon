@@ -70,12 +70,12 @@ class SubmissionList(APIView):
   
   # def get_serializer_class(self):
   #   return SubSerializer
-  def get(self, request):
+  def get(self, request, *args, **kwargs):
     query = Submissions.objects.select_related('user').prefetch_related('post').all()
     serializer = SubmissionDetailSerializer(query, many=True)
     return Response(serializer.data)
   
-  def post(self, request):
+  def post(self, request, *args, **kwargs ):
     serializer = SubSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -92,7 +92,7 @@ class SubDetail(APIView):
   def post(self,request,pk):
     user_id = request.data["user_liked"]
     submission_id = request.data["submission"]
-    query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
+    query = FavPosts.objects.filter(submission=pk, user_liked=user_id)
     if query:
       # query = FavPosts.objects.get(submission=submission_id, user_liked=user_id)
       query.delete()
@@ -102,9 +102,30 @@ class SubDetail(APIView):
     serializer = FavSerializer(data = request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
-    query_data = Submissions.objects.select_related('user').get(id=pk)
+    query_data = Submissions.objects.select_related('user').prefetch_related('post').get(id=pk)
     serial = SubmissionDetailSerializer(query_data)
     return Response(serial.data)
+  
+  def patch(self, request, pk):
+    query_object = Submissions.objects.select_related('user').prefetch_related('post').get(id=pk)
+    data = request.data
+
+    context = {
+    "user" : query_object.user.id,
+    "title" : data.get("title", query_object.title),
+    'summary' : data.get("summary", query_object.summary),
+    "description" : data.get("description", query_object.description),
+    "image" :data.get("image", query_object.image),
+    "name" : data.get("name", query_object.name),
+    "git_link" : data.get("git_link", query_object.git_link),
+    "other_link" : data.get("other_link", query_object.other_link),
+  }
+
+    serial = SubSerializer(query_object,data=context)
+    serial.is_valid(raise_exception=True)
+    serial.save()
+    serializer = SubmissionDetailSerializer(query_object)
+    return Response(serializer.data)
 
 
 # not needed
