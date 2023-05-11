@@ -126,6 +126,11 @@ class SubDetail(APIView):
     serial.save()
     serializer = SubmissionDetailSerializer(query_object)
     return Response(serializer.data)
+  
+  def delete(self, request, pk):
+    query = Submissions.objects.get(id=pk)
+    query.delete()
+    return Response({"message":"Post Deleted"},status=200)
 
 
 # not needed
