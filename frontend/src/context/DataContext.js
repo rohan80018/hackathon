@@ -11,7 +11,7 @@ export const DataProvider = ({children}) => {
 
   let [admin,setAdmin] = useState(()=>
   localStorage.getItem('admin') ? 
-  JSON.parse(localStorage.getItem('admin')) : null
+  JSON.parse(localStorage.getItem('admin')) : false
 )
 
 
@@ -54,6 +54,7 @@ export const DataProvider = ({children}) => {
     navigate("/login");
     setAuthToken(null);
     setUser(null);
+    setAdmin(false)
   }
 
   const contextData = {

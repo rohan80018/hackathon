@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Submissions, FavPosts
-from .serializer import SubSerializer, SubmissionDetailSerializer,  FavSerializer, SubDetailSerializer
+from .serializers import SubSerializer, SubmissionDetailSerializer,  FavSerializer, SubDetailSerializer
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view
