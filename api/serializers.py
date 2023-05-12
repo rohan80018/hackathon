@@ -13,18 +13,19 @@ class UserSerializer(BaseUserSerializer):
     fields = ["id", "username", "email", "isCreater"]
 
 
-class HackathonListingSerializer(serializers.ModelSerializer):
-  creater = UserSerializer()
-  class Meta:
-    model = HackathonListing
-    fields = [ "id", 'creater',"title", "summary","description","create_at", "start_date", "end_date","reward" ]
+
 
 class SubSerializer(serializers.ModelSerializer):
   
   class Meta:
     model = Submissions
-    fields = ["id",'user', 'hackathon', 'name', "summary", "description", "image", "create_at", "git_link", "other_link" ]
+    fields = ["id",'user', 'hackathon_listing', 'name', "summary", "description", "image", "create_at", "git_link", "other_link","isFav" ]
     
+class HackathonPostSerializer(serializers.ModelSerializer):
+
+  class Meta:
+    model = HackathonListing
+    fields = [ "id", 'creater',"title", "summary","description","image","create_at", "start_date", "end_date","reward"]
 
     
 class FavSerializer(serializers.ModelSerializer):
@@ -33,13 +34,22 @@ class FavSerializer(serializers.ModelSerializer):
     fields = ["id",'hackathon_id', "submission_id"]
 
 
+
 class SubmissionDetailSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
-  post= FavSerializer(many=True, read_only=False)
+  # post= FavSerializer(many=True, read_only=False)
   class Meta:
     model = Submissions
-    fields = ["id", 'user','hackathon',"name", "summary","description", "image", 'create_at', 'git_link', "other_link","post"]
+    fields = ["id", 'user','hackathon_listing',"name", "summary","description", "image", 'create_at', 'git_link', "other_link","isFav"]
 
+class HackathonListingSerializer(serializers.ModelSerializer):
+  # creater = UserSerializer()
+  submissions = SubSerializer(many=True,read_only=True)
+  creater = UserSerializer(read_only=True)
+  # listing= FavSerializer(many=True, read_only=False)
+  class Meta:
+    model = HackathonListing
+    fields = [ "id", 'creater',"title", "summary","description","image","create_at", "start_date", "end_date","reward","submissions"]
 
 # not required now
 class SubDetailSerializer(serializers.ModelSerializer):

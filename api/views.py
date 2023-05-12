@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Submissions, FavPosts
-from .serializers import SubSerializer, SubmissionDetailSerializer,  FavSerializer, SubDetailSerializer
+from .models import Submissions, FavPosts, HackathonListing
+from .serializers import SubSerializer, SubmissionDetailSerializer,  FavSerializer, SubDetailSerializer, HackathonListingSerializer, HackathonPostSerializer
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view
@@ -72,8 +72,9 @@ class SubmissionList(APIView):
   
   # def get_serializer_class(self):
   #   return SubSerializer
+  serializer_class = SubSerializer
   def get(self, request, *args, **kwargs):
-    query = Submissions.objects.select_related('user').prefetch_related('post').all()
+    query = Submissions.objects.select_related('user').all()
     serializer = SubmissionDetailSerializer(query, many=True)
     return Response(serializer.data)
   
@@ -114,13 +115,21 @@ class SubDetail(APIView):
 
     context = {
     "user" : query_object.user.id,
-    "title" : data.get("title", query_object.title),
     'summary' : data.get("summary", query_object.summary),
     "description" : data.get("description", query_object.description),
     "image" :data.get("image", query_object.image),
     "name" : data.get("name", query_object.name),
     "git_link" : data.get("git_link", query_object.git_link),
     "other_link" : data.get("other_link", query_object.other_link),
+    "hackathon_listing": data.get("hackathon_listing", query_object.hackathon_listing.id),
+    # "name": "sub1 hack1",
+    # "summary": "jknwedkn",
+    # "description": "dmw en",
+    # "image": null,
+    # "create_at": "2023-05-13T01:00:27.632788+05:30",
+    # "git_link": "https://github.com/",
+    # "other_link": "https://youtube.com/",
+    "isFav": data.get("isFav", query_object.isFav)
   }
 
     serial = SubSerializer(query_object,data=context)
@@ -153,3 +162,57 @@ class Fav_create(APIView):
     query.is_valid(raise_exception=True)
     query.save()
     return Response(query.data)
+
+
+class UserHackathonListing(APIView):
+  serializer_class = HackathonPostSerializer
+  def get_queryset(self):
+    hackathon_listings = HackathonListing.objects.select_related('creater').filter(creater=self.kwargs["pk"])
+    return hackathon_listings
+  
+  def get(self,request, *args,**kwargs):
+    try:
+      id = request.query_params["id"]
+      print(id,"jknkndjk")
+      if id != None:
+        hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
+        print(hackathon)
+        serializer = HackathonListingSerializer(hackathon)
+    except:  
+      hackathon_listing = self.get_queryset()
+      serializer = HackathonPostSerializer(hackathon_listing, many=True)
+      
+    return Response(serializer.data)
+
+  def post(self, request, *args, **kwargs):
+    serializer = HackathonPostSerializer(data= request.data)
+    serializer.is_valid()
+    serializer.save()
+
+    hackathon_listing = self.get_queryset()
+    serial = HackathonListingSerializer(hackathon_listing, many=True)
+    return Response(serial.data)
+  
+  def patch(self, request, *args, **kwargs):
+  
+      id=request.query_params["id"]
+      hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
+      data = request.data
+      context = {
+        "creater": hackathon.creater.id,
+        "title": data.get("title", hackathon.title),
+        "summary": data.get("summary", hackathon.summary),
+        "description": data.get("description", hackathon.description),
+        "image": data.get("image", hackathon.image),
+        "create_at" : data.get("create_at", hackathon.create_at),
+        "start_date" : data.get("start_date", hackathon.start_date),
+        'end_date' : data.get("end_date", hackathon.end_date),
+        "reward" : data.get("reward", hackathon.reward)
+      }
+      serializer = HackathonPostSerializer(hackathon, data=context)
+      serializer.is_valid(raise_exception=True)
+      print("some")
+      serializer.save()
+      return Response(serializer.data)
+    # except:
+    #   return Response("No Data")
