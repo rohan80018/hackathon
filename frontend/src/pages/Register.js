@@ -3,15 +3,13 @@ import { useContext,useState } from "react"
 import DataContext from "../context/DataContext"
 
 export default function Register({toggle}) {
-  const {loginUser} =useContext(DataContext)
+  const {loginUser, admin,setAdmin} =useContext(DataContext)
   let [userErr,setUserErr] = useState({})
   let [emailErr, setEmailErr] = useState({})
   let [validErr, setValidErr] = useState({})
   let [passErr,setPassErr] = useState({})
 
-  function userLogin(){
-    console.log("123")
-  }
+
   function clearErr(){
     setEmailErr({})
     setUserErr({})
@@ -21,7 +19,6 @@ export default function Register({toggle}) {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    console.log("iuerjhjk")
     clearErr()
     if(event.target.password.value === event.target.confirm.value){
       console.log("in")
@@ -34,7 +31,8 @@ export default function Register({toggle}) {
         body:JSON.stringify({
           username:event.target.username.value,
           email:event.target.email.value,
-          password:event.target.password.value
+          password:event.target.password.value,
+          isCreater: admin?true:false
         })
       })
       let data = await response.json();
@@ -61,7 +59,7 @@ export default function Register({toggle}) {
   return (
     <Flex direction="column" justify="center">
     <Box h={[61]} >
-      <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">Welcome </Text>
+      <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">{admin?"Admin signUp":"Welcome"} </Text>
       <Text fontSize="16px" fontWeight='500'>Please enter your details.</Text>
     </Box>
     <Box h={[420]} w={[500]} pt="4px">
@@ -162,6 +160,11 @@ export default function Register({toggle}) {
         <span style={{ color: "blue" }}> Log In</span>
       </Link>
     </Text>
+    <Text>{admin?
+        <Link onClick={()=>setAdmin(false)}>Sign Up as user</Link>:
+        <Link onClick={()=>setAdmin(true)}>Sign Up as an admin</Link>
+        }
+      </Text>
   </Box>
   </Flex>
   )

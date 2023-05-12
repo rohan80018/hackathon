@@ -1,9 +1,11 @@
 import { Flex,Link , Text, Box, FormControl, FormLabel, FormErrorMessage, Input, Button} from "@chakra-ui/react"
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import DataContext from "../context/DataContext"
 
 export default function LoginPage({toggle}) {
-  let {loginUser, loginErr} = useContext(DataContext)
+  let {loginUser, loginErr, admin, setAdmin} = useContext(DataContext)
+
+  // let [signInAdmin, setSignInAdmin] = useState(false)
 
 
   function userLogin(event) {
@@ -11,10 +13,11 @@ export default function LoginPage({toggle}) {
     loginUser(event.target.username.value,event.target.password.value)
   } 
 
+
   return(
     <Flex direction="column">
       <Box h={[61]} >
-        <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">Welcome back!</Text>
+        <Text fontSize="30px" color="white" fontWeight="500" fontFamily="FreeMono, monospace">Welcome Back!</Text>
         <Text fontSize="16px" fontWeight="500">Please enter login credentials</Text>
       </Box>
       <Box h={[300]} w={[500]} pt="4px">
@@ -67,6 +70,12 @@ export default function LoginPage({toggle}) {
           <span style={{ color: "blue" }}> Sign Up</span>
         </Link>
       </Text>
+      {/* <Text>{admin?
+        <Link onClick={()=>setAdmin(false)}>Sign In as user</Link>:
+        <Link onClick={()=>setAdmin(true)}>Sign In as an admin</Link>
+        }
+      </Text> */}
+      
     </Box>
     </Flex>
   )

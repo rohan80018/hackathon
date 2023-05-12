@@ -9,12 +9,19 @@ export default DataContext;
 export const DataProvider = ({children}) => {
   let navigate = useNavigate();
 
+  let [admin,setAdmin] = useState(()=>
+  localStorage.getItem('admin') ? 
+  JSON.parse(localStorage.getItem('admin')) : null
+)
+
+
   let [user, setUser] = useState(null)
   let [authToken, setAuthToken] = useState(()=>
     localStorage.getItem('token') ? 
     JSON.parse(localStorage.getItem('token')) : null
   )
   let [loginErr,setLoginErr] = useState(false)
+
 
   async function loginUser(username, password) {
     let response = await fetch('http://127.0.0.1:8000/hackathon/token/', {
@@ -33,6 +40,9 @@ export const DataProvider = ({children}) => {
       setUser(jwt_decode(data.access))
       setAuthToken(data)
       localStorage.setItem("token", JSON.stringify(data))
+      console.log(jwt_decode(data.access).admin)
+      setAdmin(jwt_decode(data.access).admin)
+      localStorage.setItem('admin', JSON.stringify(jwt_decode(data.access).admin))
       navigate("/");
     }else if (response.status === 401 || response.status === 400){
       setLoginErr(true)
@@ -47,6 +57,7 @@ export const DataProvider = ({children}) => {
   }
 
   const contextData = {
+    admin: admin ,setAdmin: setAdmin,
     loginUser: loginUser,
     loginErr: loginErr,
     user: user,
