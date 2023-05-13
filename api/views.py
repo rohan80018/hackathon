@@ -194,25 +194,32 @@ class UserHackathonListing(APIView):
     return Response(serial.data)
   
   def patch(self, request, *args, **kwargs):
-  
-      id=request.query_params["id"]
-      hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
-      data = request.data
-      context = {
-        "creater": hackathon.creater.id,
-        "title": data.get("title", hackathon.title),
-        "summary": data.get("summary", hackathon.summary),
-        "description": data.get("description", hackathon.description),
-        "image": data.get("image", hackathon.image),
-        "create_at" : data.get("create_at", hackathon.create_at),
-        "start_date" : data.get("start_date", hackathon.start_date),
-        'end_date' : data.get("end_date", hackathon.end_date),
-        "reward" : data.get("reward", hackathon.reward)
-      }
-      serializer = HackathonPostSerializer(hackathon, data=context)
-      serializer.is_valid(raise_exception=True)
-      print("some")
-      serializer.save()
-      return Response(serializer.data)
-    # except:
-    #   return Response("No Data")
+    id=request.query_params["id"]
+    try:
+      if id != None:
+        hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
+        data = request.data
+        context = {
+          "creater": hackathon.creater.id,
+          "title": data.get("title", hackathon.title),
+          "summary": data.get("summary", hackathon.summary),
+          "description": data.get("description", hackathon.description),
+          "image": data.get("image", hackathon.image),
+          "create_at" : data.get("create_at", hackathon.create_at),
+          "start_date" : data.get("start_date", hackathon.start_date),
+          'end_date' : data.get("end_date", hackathon.end_date),
+          "reward" : data.get("reward", hackathon.reward)
+        }
+        serializer = HackathonPostSerializer(hackathon, data=context)
+        serializer.is_valid(raise_exception=True)
+        print("some")
+        serializer.save()
+        return Response(serializer.data)
+    except:
+      return Response("No Data")
+
+  def delete(self, request, *args, **kwargs):
+    id = request.query_params["id"]
+    query = HackathonListing.objects.get(id=id)
+    query.delete()
+    return Response({"message":"Post delete"}, status=200)
