@@ -14,7 +14,7 @@ export default function HomePage() {
   return(
     <>
       <NavBar />
-      <Flex h="300px" bg="#003145" backgroundImage={waves} >
+      <Flex minH="300px" bg="#003145" backgroundImage={waves} >
         {admin?
         <Flex  w="100svw" justify="space-around">
           <Flex w={[800]} pl="80px" pr="20px" pb="8px" direction="column" justify='space-evenly'>
@@ -43,7 +43,7 @@ export default function HomePage() {
         </Grid>
       </Flex> */}
       <Flex w="100svw" justify="center" h="390px">
-        <Tablets />
+        <Tablets  type={"admin"}/>
       </Flex>
     </>
   )

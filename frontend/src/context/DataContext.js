@@ -57,6 +57,18 @@ export const DataProvider = ({children}) => {
     setAdmin(false)
   }
 
+  const [userHackathonEvent, setUserHackathonEvent] = useState({})
+
+  async function getUserHackathon() {
+    let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${jwt_decode(authToken.access).user_id}/`)
+
+    let data = await response.json()
+    console.log(data)
+    if (response.status === 200){
+      setUserHackathonEvent(data)
+    }
+  }
+
   const contextData = {
     admin: admin ,setAdmin: setAdmin,
     loginUser: loginUser,
@@ -65,6 +77,8 @@ export const DataProvider = ({children}) => {
     logoutUser: logoutUser,
     authToken: authToken,
     setLoginErr: setLoginErr,
+
+    getUserHackathon: getUserHackathon,userHackathonEvent: userHackathonEvent, setUserHackathonEvent:setUserHackathonEvent,
   }
   return (
     <DataContext.Provider value={contextData}>{children}</DataContext.Provider>

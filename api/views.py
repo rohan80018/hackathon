@@ -194,27 +194,35 @@ class UserHackathonListing(APIView):
     return Response(serial.data)
   
   def patch(self, request, *args, **kwargs):
-    id=request.query_params["id"]
+    
     try:
-      if id != None:
-        hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
-        data = request.data
-        context = {
-          "creater": hackathon.creater.id,
-          "title": data.get("title", hackathon.title),
-          "summary": data.get("summary", hackathon.summary),
-          "description": data.get("description", hackathon.description),
-          "image": data.get("image", hackathon.image),
-          "create_at" : data.get("create_at", hackathon.create_at),
-          "start_date" : data.get("start_date", hackathon.start_date),
-          'end_date' : data.get("end_date", hackathon.end_date),
-          "reward" : data.get("reward", hackathon.reward)
-        }
-        serializer = HackathonPostSerializer(hackathon, data=context)
-        serializer.is_valid(raise_exception=True)
-        print("some")
-        serializer.save()
-        return Response(serializer.data)
+      id=request.query_params["id"]
+      # if id != None:
+      print("1")
+      print(id)
+      hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
+      print(hackathon)
+      data = request.data
+      print(data)
+      context = {
+        "creater": hackathon.creater.id,
+        "title": data.get("title", hackathon.title),
+        "summary": data.get("summary", hackathon.summary),
+        "description": data.get("description", hackathon.description),
+        "image": data.get("image", hackathon.image),
+        "create_at" : data.get("create_at", hackathon.create_at),
+        "start_date" : data.get("start_date", hackathon.start_date),
+        'end_date' : data.get("end_date", hackathon.end_date),
+        "reward" : data.get("reward", hackathon.reward)
+      }
+      print("2")
+      serializer = HackathonPostSerializer(hackathon, data=context)
+      print("3")
+      serializer.is_valid(raise_exception=True)
+
+      print("some")
+      serializer.save()
+      return Response(serializer.data)
     except:
       return Response("No Data")
 
