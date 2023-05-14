@@ -8,9 +8,9 @@ export default function NavBar() {
   let {logoutUser} = useContext(DataContext)
 
   return(
-    <Flex justify={"space-between"} bg="white" pl="5%" pr="5%" h="64px">
+    <Flex justify={"space-between"} bg="white" pl="5%" pr="5%" h="55px">
       <Link to="/">
-        <Image h="64px" src={logo}/>
+        <Image h="55px" src={logo}/>
       </Link>
       <Center>
         <Link>  

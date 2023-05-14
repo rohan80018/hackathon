@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 def upload_path(instance, filename):
   return "/".join([str(instance.title) + str(random.randint(0, 10000)), filename])
+def upload_path_submission(instance, filename):
+  return "/".join([str(instance.name) + str(random.randint(0, 10000)), filename])
 
 # Create your models here.
 class User(AbstractUser):
@@ -35,7 +37,7 @@ class Submissions(models.Model):
   summary = models.CharField(max_length=85)
   description = models.CharField(max_length=3000)
 
-  image = models.ImageField(upload_to= upload_path, blank=True, null=True)
+  image = models.ImageField(upload_to= upload_path_submission, blank=True, null=True)
 
   create_at = models.DateTimeField(auto_now_add=True)
 
