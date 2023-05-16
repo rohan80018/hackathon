@@ -9,6 +9,7 @@ import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import PrivateRoute from "./utils/PrivateRoute";
 import MainPage from "./pages/MainPage";
+import CreatePage from "./components/Create";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route exact path="/" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
             <Route exact path="/login" element={<MainPage />}/>
+            <Route exact path="/create" element={<CreatePage />}/>
           </Routes>
         </DataProvider>
       </Router>

@@ -53,7 +53,7 @@ class HackathonListingSerializer(serializers.ModelSerializer):
   # listing= FavSerializer(many=True, read_only=False)
   class Meta:
     model = HackathonListing
-    fields = [ "id", 'creater',"title", "summary","description","image","create_at", "start_date", "end_date","reward","submissions","date"]
+    fields = [ "id", 'creater',"title", "summary","description","image","create_at", "start_date", "end_date","reward","submissions"]
 
   
 # not required now

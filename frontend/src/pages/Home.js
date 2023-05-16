@@ -1,15 +1,17 @@
-import { Flex, Box, Image, Text, Button} from "@chakra-ui/react"
+import { Flex, Box, Image, Text, Button, Link} from "@chakra-ui/react"
 import NavBar from "../components/NavBar"
 import { useContext } from "react"
 import DataContext from "../context/DataContext"
 import waves from "../images/waves.png"
 import idea from "../images/idea1.png"
+import {useNavigate} from 'react-router-dom'
 import Tablets from "../components/Tabs"
 
 export default function HomePage() {
   let {admin} = useContext(DataContext)
-  function print(){
-    console.log(admin)
+  let navigate = useNavigate()
+  function createFunction(){
+    navigate("/create")
   }
   return(
     <>
@@ -26,7 +28,8 @@ export default function HomePage() {
               feugiat faucibus. Congue laoreet duis porta turpis eget suspendisse ac pharetra amet. Vel
               nisl tempus nec vitae.
             </Text>
-            <Button size="md" w="120px" colorScheme='green'>Create Event</Button>
+            
+              <Button onClick={createFunction} size="md" w="120px" colorScheme='green'>Create Event</Button> 
           </Flex>
           <Box w={[300]}>
             <Image  src={idea}/>
@@ -43,7 +46,7 @@ export default function HomePage() {
         </Grid>
       </Flex> */}
       <Flex w="100svw" justify="center" h="390px">
-        <Tablets  type={"admin"}/>
+        <Tablets/>
       </Flex>
     </>
   )

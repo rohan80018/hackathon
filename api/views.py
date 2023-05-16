@@ -186,7 +186,7 @@ class UserHackathonListing(APIView):
 
   def post(self, request, *args, **kwargs):
     serializer = HackathonPostSerializer(data= request.data)
-    serializer.is_valid()
+    serializer.is_valid(raise_exception=True)
     serializer.save()
 
     hackathon_listing = self.get_queryset()
