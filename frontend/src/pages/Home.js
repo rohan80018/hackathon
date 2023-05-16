@@ -46,7 +46,7 @@ export default function HomePage() {
         </Grid>
       </Flex> */}
       <Flex w="100svw" justify="center" h="390px">
-        <Tablets/>
+        {admin?<Tablets/>:""}
       </Flex>
     </>
   )

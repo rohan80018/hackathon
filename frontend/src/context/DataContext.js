@@ -15,7 +15,10 @@ export const DataProvider = ({children}) => {
 )
 
 
-  let [user, setUser] = useState(null)
+  let [user, setUser] = useState(()=>
+    localStorage.getItem('user') ? 
+    JSON.parse(localStorage.getItem('user')) : null
+    )
   let [authToken, setAuthToken] = useState(()=>
     localStorage.getItem('token') ? 
     JSON.parse(localStorage.getItem('token')) : null
@@ -38,9 +41,9 @@ export const DataProvider = ({children}) => {
       let data = await response.json()
       setLoginErr(false)
       setUser(jwt_decode(data.access))
+      localStorage.setItem('user', JSON.stringify(jwt_decode(data.access)))
       setAuthToken(data)
       localStorage.setItem("token", JSON.stringify(data))
-      console.log(jwt_decode(data.access).admin)
       setAdmin(jwt_decode(data.access).admin)
       localStorage.setItem('admin', JSON.stringify(jwt_decode(data.access).admin))
       navigate("/");
@@ -50,7 +53,9 @@ export const DataProvider = ({children}) => {
   }
 
   function logoutUser() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("token")
+    localStorage.removeItem("admin");
+    localStorage.removeItem("user")
     navigate("/login");
     setAuthToken(null);
     setUser(null);

@@ -8,7 +8,7 @@ import {Grid,Text, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, TabInd
   PopoverCloseButton,
   InputLeftElement,
   InputGroup,Card, CardHeader, CardBody, CardFooter} from "@chakra-ui/react"
-import { ArrowDownIcon, TriangleDownIcon, Search2Icon } from '@chakra-ui/icons'
+import { TriangleDownIcon, Search2Icon } from '@chakra-ui/icons'
 import { useContext, useState, useEffect } from "react"
 import DataContext from "../context/DataContext"
 import React from 'react'
@@ -19,7 +19,7 @@ export default function Tablets(props) {
   let{userHackathonEvent, getUserHackathon, admin} = useContext(DataContext)
 
   const [newest, setNewest] = useState(true)  
-
+  console.log(admin)
   useEffect(()=>{
     if(admin&&props.type==="admin"){
       // "submissions()"
