@@ -10,7 +10,7 @@ export default function NavBar() {
 
   return(
     <Flex justify={"space-between"} bg="white" pl="5%" pr="5%" h="55px">
-      <Link to="/">
+      <Link to="/events">
         <Image h="55px" src={logo}/>
       </Link>
       <Center>

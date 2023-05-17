@@ -17,9 +17,12 @@ function App() {
       <Router>
         <DataProvider>
           <Routes>
-            <Route exact path="/" element={<PrivateRoute> <HomePage /> </PrivateRoute>}/>
+            <Route  path="events" element={<PrivateRoute> <HomePage /> </PrivateRoute>}>
+              {/* <Route path='new_event' element={<CreatePage />}/> */}
+
+            </Route>
             <Route exact path="/login" element={<MainPage />}/>
-            <Route exact path="/create" element={<CreatePage />}/>
+            <Route exact path="/events/new_event" element={<CreatePage />}/>
           </Routes>
         </DataProvider>
       </Router>
