@@ -78,7 +78,7 @@ function handleSubmit(event){
       <NavBar/>
       <Box bg="#d9e9fa" minH="93svh" p="50px" pr="100px">
         <form onSubmit={handleSubmit}>
-        <Flex bg="white" borderRadius="9px" direction="column" gap="20px" p="30px" w="1100px">
+        <Flex bg="white" borderRadius="14px" direction="column" gap="20px" p="30px" w="1100px">
           <Text fontSize="28px" fontWeight="600">{!props.type?"New Hackathon Event":"Edit Event"}</Text>
           
           
