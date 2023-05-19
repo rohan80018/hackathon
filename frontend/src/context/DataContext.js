@@ -46,7 +46,7 @@ export const DataProvider = ({children}) => {
       localStorage.setItem("token", JSON.stringify(data))
       setAdmin(jwt_decode(data.access).admin)
       localStorage.setItem('admin', JSON.stringify(jwt_decode(data.access).admin))
-      navigate("/");
+      navigate("/events");
     }else if (response.status === 401 || response.status === 400){
       setLoginErr(true)
     }

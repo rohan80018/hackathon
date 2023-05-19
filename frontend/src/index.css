@@ -5,8 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
 }
-
+body::-webkit-scrollbar{
+  display: none;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -15,4 +18,16 @@ code {
 .custom-div{
   clip-path: polygon(75% 100%, 100% 0%, 100% 0%, 0% 0%, 0% 100%);
   /* font-family: cursive; */
+}
+.create-textarea::-webkit-scrollbar{
+  display: none;
+}
+
+.image-input::-webkit-file-upload-button{
+  visibility: hidden;
+}
+.image-input-icon{
+  object-fit: fill;
+  border-radius: 9px;
+  box-shadow: 2px 2px 2px 2px rgb(182, 180, 180);
 }
