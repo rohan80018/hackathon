@@ -4,7 +4,7 @@ import { useContext } from "react"
 import DataContext from "../context/DataContext"
 import waves from "../images/waves.png"
 import idea from "../images/idea1.png"
-import {useNavigate,Link, Outlet} from 'react-router-dom'
+import {useNavigate,Link} from 'react-router-dom'
 import Tablets from "../components/Tabs"
 
 export default function HomePage() {
@@ -29,7 +29,7 @@ export default function HomePage() {
               nisl tempus nec vitae.
             </Text>
             
-              <Button  size="md" w="120px" colorScheme='green'><Link to="/events/new_event">Create Event</Link></Button> 
+            <Link className="link-create" to="/events/new_event"><Button  size="md" w="120px" colorScheme='green'>Create Event</Button></Link> 
           </Flex>
           <Box w={[300]}>
             <Image  src={idea}/>

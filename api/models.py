@@ -19,7 +19,7 @@ class HackathonListing(models.Model):
   summary = models.CharField(max_length=85)
   description = models.CharField(max_length=3000)
 
-  image = models.ImageField(upload_to= upload_path, blank=True, null=True)
+  image = models.ImageField(upload_to= upload_path)
 
   create_at = models.DateTimeField(auto_now_add=True)
   start_date = models.DateTimeField()

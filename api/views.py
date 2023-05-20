@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.decorators import parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.views import APIView
@@ -165,6 +165,7 @@ class Fav_create(APIView):
 
 
 class UserHackathonListing(APIView):
+  parser_classes = (MultiPartParser, FormParser)
   serializer_class = HackathonPostSerializer
   def get_queryset(self):
     hackathon_listings = HackathonListing.objects.select_related('creater').filter(creater=self.kwargs["pk"])
@@ -185,13 +186,14 @@ class UserHackathonListing(APIView):
     return Response(serializer.data)
 
   def post(self, request, *args, **kwargs):
+    print(request.data)
     serializer = HackathonPostSerializer(data= request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
     hackathon_listing = self.get_queryset()
     serial = HackathonListingSerializer(hackathon_listing, many=True)
-    return Response(serial.data)
+    return Response(serial.data, status=201)
   
   def patch(self, request, *args, **kwargs):
     
