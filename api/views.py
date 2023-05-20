@@ -192,7 +192,7 @@ class UserHackathonListing(APIView):
     serializer.save()
 
     hackathon_listing = self.get_queryset()
-    serial = HackathonListingSerializer(hackathon_listing, many=True)
+    serial = HackathonPostSerializer(hackathon_listing, many=True)
     return Response(serial.data, status=201)
   
   def patch(self, request, *args, **kwargs):
