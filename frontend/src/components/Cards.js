@@ -3,7 +3,7 @@ import ReactTimeAgo from 'react-time-ago'
 
 export default function Cards({data}){
   return(
-    <Card key={data.id} minH="250px">
+    <Card key={data.id} minH="276px">
       <CardHeader>
         <Flex justify="space-around">
           <Image src={`http://127.0.0.1:8000${data.image}`} boxSize="90px" borderRadius="9px"/>

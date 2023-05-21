@@ -28,6 +28,11 @@ export default function Tablets(props) {
     }
   },[])
   
+  // function sortToggle(toggle){
+  //   toggle?setNewest(true):setNewest(false)
+
+  // }
+
   if (!Object.keys(userHackathonEvent).length){
     return(<h1>Loading</h1>)
   }
@@ -69,7 +74,7 @@ export default function Tablets(props) {
                     <Button pb="2px" w="115px" borderRadius="24px" h="35px" mt="7px" rightIcon={<TriangleDownIcon />}>{newest?"Newest":"Oldest"}</Button>
                   </PopoverTrigger>
                   <PopoverContent w="150px">
-                    {/* <PopoverArrow /> */}
+                    <PopoverArrow />
                     {/* <PopoverCloseButton /> */}
                     {/* <PopoverHeader>Confirmation!</PopoverHeader> */}
                     <PopoverBody>

@@ -32,17 +32,20 @@ export default function CreatePage(props){
   const formData = new FormData()
   async function handleSubmit(event){
     event.preventDefault()
-    if (formValue.image){
-      formData.append("image", formValue.image, formValue.image.name);
+    for (let i in formValue){
+      if (i===formValue.image){
+        formData.append("image", formValue.image, formValue.image.name);
+      }else formData.append(i,formValue[i])
     }
-    formData.append("creater", formValue.creater)
-    formData.append("title", formValue.title)
-    formData.append("summary", formValue.summary)
-    formData.append("description", formValue.description)
-    // formData.append("image",event.target.files[0])
-    formData.append("start_date", formValue.start_date)
-    formData.append("end_date", formValue.end_date)
-    formData.append("reward", formValue.reward)
+    
+    // formData.append("creater", formValue.creater)
+    // formData.append("title", formValue.title)
+    // formData.append("summary", formValue.summary)
+    // formData.append("description", formValue.description)
+    // // formData.append("image",event.target.files[0])
+    // formData.append("start_date", formValue.start_date)
+    // formData.append("end_date", formValue.end_date)
+    // formData.append("reward", formValue.reward)
     let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${user.user_id}/`,{
       method:"POST",
       body:formData
