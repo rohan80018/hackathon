@@ -14,9 +14,10 @@ import DataContext from "../context/DataContext"
 import React from 'react'
 
 import Cards from "./Cards"
+import { Link } from "react-router-dom"
 
 export default function Tablets(props) {
-  let{userHackathonEvent, getUserHackathon, admin} = useContext(DataContext)
+  let{userHackathonEvent, getUserHackathon, admin, eventData} = useContext(DataContext)
 
   const [newest, setNewest] = useState(true)  
   console.log(admin)
@@ -32,14 +33,22 @@ export default function Tablets(props) {
   //   toggle?setNewest(true):setNewest(false)
 
   // }
-
-  if (!Object.keys(userHackathonEvent).length){
-    return(<h1>Loading</h1>)
+  
+  if (props.type==="admin"&&!Object.keys(eventData).length){
+    return(<h1>Loading events</h1>)
   }
-  console.log(userHackathonEvent)
-  let eventData = newest? userHackathonEvent.slice(0).reverse().map((data)=>(
-    <Cards data={data} />
-  )):userHackathonEvent.map((data)=>(<Cards data={data}/>))
+  else if(props.type!=="admin"&& !Object.keys(userHackathonEvent).length){
+    return (<h1>Loading submissions</h1>)
+  }
+  // console.log(userHackathonEvent)
+  
+    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=><Cards data={data} type="submissions"/>):
+      eventData.submissions.map((data)=>(<Cards data={data}/>))
+    : newest? userHackathonEvent.slice(0).reverse().map((data)=>(
+      <Cards data={data} />
+      )):userHackathonEvent.map((data)=>(<Cards data={data}/>))
+  
+  
 
   return (
     <Tabs position="relative" variant="unstyled" size="lg" w="1300px" >
@@ -63,7 +72,7 @@ export default function Tablets(props) {
                   <InputLeftElement
                     mt="4px"
                     pointerEvents="none"
-                    children={<Search2Icon color="gray.300" />}
+                    children={<Search2Icon color="gray.400" />}
                     size="sm"
                   />
                   <Input pb="2px" variant='filled' mt="7px" h="35px" borderRadius="24px" w="220px" placeholder={admin&&props.type==="admin"?"Search Submissions":"Search Hackathon"} />
@@ -99,7 +108,12 @@ export default function Tablets(props) {
         {admin&&props.type==="admin"?
           <TabPanels>
             <TabPanel>
-              <p>panel 1</p>
+              {eventData.submissions.length?<Grid templateColumns='repeat(3, 1fr)' gap={9}>
+                {renderData}
+              </Grid>:
+              <Flex justify="center" mt="40px">
+                <Text fontSize="24px">No Submissions yet</Text>
+              </Flex>}
             </TabPanel>
             <TabPanel>
               <p>panel 2</p>
@@ -108,7 +122,7 @@ export default function Tablets(props) {
           <TabPanels>
             <TabPanel>
               <Grid templateColumns='repeat(3, 1fr)' gap={9}>
-                {eventData}
+                {renderData}
               </Grid>
             </TabPanel>
           </TabPanels>

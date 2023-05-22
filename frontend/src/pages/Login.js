@@ -37,6 +37,7 @@ export default function LoginPage({toggle}) {
                 name="username"
                 id="username"
                 color="black"
+                autoFocus
                 //   w={[100, 300, 400]}
                 
               />

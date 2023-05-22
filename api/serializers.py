@@ -16,10 +16,14 @@ class UserSerializer(BaseUserSerializer):
 
 
 class SubSerializer(serializers.ModelSerializer):
-  
+  date = serializers.SerializerMethodField(method_name='get_date_timestamp')
   class Meta:
     model = Submissions
-    fields = ["id",'user', 'hackathon_listing', 'name', "summary", "description", "image", "create_at", "git_link", "other_link","isFav" ]
+    fields = ["id",'user', 'hackathon_listing', 'title', "summary", "description", "image", "create_at","date", "git_link", "other_link","isFav" ]
+  
+  def get_date_timestamp(self, instance):
+      d= instance.create_at.timestamp()
+      return d *1000
     
 class HackathonPostSerializer(serializers.ModelSerializer):
   date = serializers.SerializerMethodField(method_name='get_date_timestamp')
@@ -49,12 +53,18 @@ class HackathonListingSerializer(serializers.ModelSerializer):
   # creater = UserSerializer()
   submissions = SubSerializer(many=True,read_only=True)
   creater = UserSerializer(read_only=True)
-  
-  # listing= FavSerializer(many=True, read_only=False)
+  startDate = serializers.SerializerMethodField(method_name='get_startDate_timestamp')
+  endDate = serializers.SerializerMethodField(method_name='get_endDate_timestamp')
   class Meta:
     model = HackathonListing
-    fields = [ "id", 'creater',"title", "summary","description","image","create_at", "start_date", "end_date","reward","submissions"]
+    fields = [ "id", 'creater',"title", "summary","description","image","create_at","start_date","end_date","startDate", "endDate","reward","submissions"]
 
+  def get_startDate_timestamp(self, instance):
+      d= instance.start_date.timestamp()
+      return d *1000
+  def get_endDate_timestamp(self, instance):
+      d= instance.end_date.timestamp()
+      return d *1000
   
 # not required now
 class SubDetailSerializer(serializers.ModelSerializer):

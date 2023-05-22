@@ -10,6 +10,7 @@ import LoginPage from "./pages/Login";
 import PrivateRoute from "./utils/PrivateRoute";
 import MainPage from "./pages/MainPage";
 import CreatePage from "./components/Create";
+import HackathonDetail from "./components/HackathonDetail";
 
 function App() {
   return (
@@ -17,10 +18,11 @@ function App() {
       <Router>
         <DataProvider>
           <Routes>
-            <Route  path="events" element={<PrivateRoute> <HomePage /> </PrivateRoute>}>
+            <Route exact path="events" element={<PrivateRoute> <HomePage /> </PrivateRoute>}>
               {/* <Route path='new_event' element={<CreatePage />}/> */}
 
             </Route>
+            <Route exact path="/events/:eventId" element={<HackathonDetail />} />
             <Route exact path="/login" element={<MainPage />}/>
             <Route exact path="/events/new_event" element={<CreatePage />}/>
           </Routes>

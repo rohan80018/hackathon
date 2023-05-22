@@ -32,7 +32,7 @@ class Submissions(models.Model):
   hackathon_listing = models.ForeignKey(HackathonListing, on_delete=models.CASCADE, related_name="submissions", default=True)
   # hackathon_listing = models.ForeignKey(HackathonListing, on_delete=models.CASCADE, related_name="submissions", default=True)
 
-  name = models.CharField(max_length=25)
+  title = models.CharField(max_length=25)
 
   summary = models.CharField(max_length=85)
   description = models.CharField(max_length=3000)
