@@ -1,6 +1,6 @@
 import NavBar from "./NavBar";
 import waves from "../images/waves.png"
-import { Flex, Box, Image, Text, Button,Center} from "@chakra-ui/react"
+import { Flex, Box, Image, Text, Button,Center, Tooltip} from "@chakra-ui/react"
 import DataContext from "../context/DataContext";
 import {Link, useParams} from "react-router-dom"
 import {useEffect, useContext, useState} from "react"
@@ -53,10 +53,16 @@ export default function HackathonDetail(){
             </Flex>
           </Flex>
           <Flex w={[300]} direction="column" align="center" justify="center" gap="1rem">
-            <Link to={eventData.startDate>=now?`edit`:"#"} ><Button leftIcon={<EditIcon/>} _-_hover={eventData.startDate>=now?{"content":"dis"}:""} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
-              Edit
-            </Button></Link>
-            <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
+            <Link to={eventData.startDate>=now?`edit`:"#"} >
+              <Tooltip hasArrow bg="blue.400" isDisabled={eventData.startDate>=now?true:false} placement='top' label="Can't edit, event already started">
+                <Button leftIcon={<EditIcon/>} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
+                  Edit
+                </Button>
+              </Tooltip>
+            </Link>
+            <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! Event including submissions will be deleted">
+              <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
+            </Tooltip>
           </Flex>
         </Flex>
         
