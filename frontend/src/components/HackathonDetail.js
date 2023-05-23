@@ -2,7 +2,7 @@ import NavBar from "./NavBar";
 import waves from "../images/waves.png"
 import { Flex, Box, Image, Text, Button,Center} from "@chakra-ui/react"
 import DataContext from "../context/DataContext";
-import {useParams} from "react-router-dom"
+import {Link, useParams} from "react-router-dom"
 import {useEffect, useContext, useState} from "react"
 import { CalendarIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import Tablets from "./Tabs";
@@ -23,6 +23,10 @@ export default function HackathonDetail(){
     return( <h1>Loading</h1>)
   }
 
+  const now = new Date().getTime()
+  console.log(now)
+  console.log(eventData.startDate)
+
   let date = new Date(eventData.startDate)
   let startDate = date.toDateString().slice(3)
 
@@ -33,8 +37,8 @@ export default function HackathonDetail(){
       <NavBar/>
       <Flex minH="300px" bg="#003145" backgroundImage={waves} >
 
-        <Flex  w="100svw" justify="center">
-          <Flex  w={[900]} pl="80px" pr="20px" pb="8px" direction="column" justify='space-evenly'>
+        <Flex  w="100svw" justify="space-around">
+          <Flex  w={[800]} pl="80px" pr="20px" pb="8px" direction="column" justify='space-evenly'>
             <Flex minW="300px" gap="3rem">
               <Image src={`http://127.0.0.1:8000${eventData.image}`} boxSize="100px" borderRadius='12px'/>
               <Center><Text fontSize="34px"  color="white" fontWeight={700} fontFamily="Bahnschrift">{eventData.title}</Text></Center>
@@ -49,20 +53,21 @@ export default function HackathonDetail(){
             </Flex>
           </Flex>
           <Flex w={[300]} direction="column" align="center" justify="center" gap="1rem">
-            <Button leftIcon={<EditIcon/>} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue">
+            <Link to={eventData.startDate>=now?`edit`:"#"} ><Button leftIcon={<EditIcon/>} _-_hover={eventData.startDate>=now?{"content":"dis"}:""} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
               Edit
-            </Button>
+            </Button></Link>
             <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
           </Flex>
         </Flex>
         
         
       </Flex>
-      <Box w="80svw" pt="20px" pl="80px">
-        <Text fontSize="24px" fontWeight="600">
+      <Box w="80svw" pt="20px" pl="120px">
+        <Text decoration="underline" fontSize="24px" fontWeight="600">
           Description
         </Text>
-        <Text fontSize="17px" fontWeight="500">
+        <br></br>
+        <Text fontSize="17px" fontWeight="500" className="pre-line">
           {eventData.description}
         </Text>
       </Box>

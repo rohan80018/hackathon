@@ -42,11 +42,11 @@ export default function Tablets(props) {
   }
   // console.log(userHackathonEvent)
   
-    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=><Cards data={data} type="submissions"/>):
-      eventData.submissions.map((data)=>(<Cards data={data}/>))
+    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=><Cards data={data} key={data.id} type="submissions"/>):
+      eventData.submissions.map((data)=>(<Cards data={data} key={data.id} />))
     : newest? userHackathonEvent.slice(0).reverse().map((data)=>(
-      <Cards data={data} />
-      )):userHackathonEvent.map((data)=>(<Cards data={data}/>))
+      <Cards data={data} key={data.id} />
+      )):userHackathonEvent.map((data)=>(<Cards data={data} key={data.id}/>))
   
   
 
@@ -116,7 +116,7 @@ export default function Tablets(props) {
               </Flex>}
             </TabPanel>
             <TabPanel>
-              <p>panel 2</p>
+              
             </TabPanel>
           </TabPanels>:
           <TabPanels>

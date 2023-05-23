@@ -38,3 +38,16 @@ code {
 .cards-div{
   box-shadow: 10px 10px 10px 12px rgb(177, 65, 65);
 }
+
+.pre-line{
+  white-space: pre-line;
+}
+#label{
+  background-color: rgb(74, 130, 191);
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}

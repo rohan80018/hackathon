@@ -1,23 +1,26 @@
-import { useState, useContext } from "react"
+import { useState, useContext,useEffect } from "react"
 import DataContext from "../context/DataContext"
 import NavBar from "./NavBar"
-import {Flex,InputGroup, InputLeftElement,Button, Text,Input, Textarea, Image, Box, FormErrorMessage, FormControl, FormLabel,} from "@chakra-ui/react"
+import {Flex,InputGroup,IconButton, InputLeftElement,Button, Text,Input, Textarea, Image, Box, FormErrorMessage, FormControl, FormLabel,} from "@chakra-ui/react"
 import upload from "../images/upload.png"
 import {useNavigate} from "react-router-dom";
+import { AddIcon } from "@chakra-ui/icons"
 
 export default function CreatePage(props){
-  let {setUserHackathonEvent,user} = useContext(DataContext)
+  let {setUserHackathonEvent,user, eventData, setEventData} = useContext(DataContext)
   let navigate= useNavigate()
   let [selectImage, setSelectImage] = useState("")
+  let [img, setImg] = useState({"image":""})
+
   let [formValue,setFormValue] = useState({
     "creater":user.user_id,
-    "title":"",
-    "summary":"",
-    "description":"",
-    "image":"",
-    "start_date":"",
-    "end_date":"",
-    "reward":""
+    "title":props.type?eventData.title:"",
+    "summary":props.type?eventData.summary:"",
+    "description":props.type?eventData.description:"",
+    "image":props.type?eventData.image:"",
+    "start_date":props.type?eventData.start_date.split("T")[0]:"",
+    "end_date":props.type?eventData.end_date.split("T")[0]:"",
+    "reward":props.type?eventData.reward:""
   })
   let [err,setErr] = useState({
     "title":"",
@@ -37,15 +40,6 @@ export default function CreatePage(props){
         formData.append("image", formValue.image, formValue.image.name);
       }else formData.append(i,formValue[i])
     }
-    
-    // formData.append("creater", formValue.creater)
-    // formData.append("title", formValue.title)
-    // formData.append("summary", formValue.summary)
-    // formData.append("description", formValue.description)
-    // // formData.append("image",event.target.files[0])
-    // formData.append("start_date", formValue.start_date)
-    // formData.append("end_date", formValue.end_date)
-    // formData.append("reward", formValue.reward)
     let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${user.user_id}/`,{
       method:"POST",
       body:formData
@@ -65,6 +59,36 @@ export default function CreatePage(props){
       },500)
     }
   }
+  async function handleEdit(event){
+    event.preventDefault()
+    // console.log(formValue)
+    for (let i in formValue){
+      if(i==="image"){
+        selectImage&&formData.append("image",selectImage)
+      }else{
+        formData.append(i,formValue[i])
+      }
+    }
+    let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${user.user_id}/?id=${eventData.id}`,{
+      method:"PATCH",
+      body:formData
+    })
+    let data = await response.json()
+    if (response.status===400){
+      console.log(response.status)
+      for (let i in data){
+        console.log(i, data[i])
+        setErr((prev)=>{
+          return {...prev, [i]:data[i]}
+        })
+      }
+    }else if (response.status===201){
+      setEventData(data)
+      setTimeout(()=>{
+        navigate(`/events/${data.id}`)
+      },500)
+    }
+  }
 
   function handleKeyDown(event){
     const {name,value} = event.target
@@ -79,6 +103,7 @@ export default function CreatePage(props){
 
   function handleChange(event){
     const {name,value} = event.target
+    name==="start_date"&&console.log(value)
     if(formValue.description.length<3000){
       setErr((prev)=>{
         return ({...prev, description:""})
@@ -93,6 +118,7 @@ export default function CreatePage(props){
     }
   }
   function handleImageChange(event){
+    console.log(event.target.files[0])
     setSelectImage(event.target.files[0])
 
     let newData = { ...formValue };
@@ -123,11 +149,15 @@ export default function CreatePage(props){
     endMaxDate = `${newDate.getFullYear()}-${endMaxMonth<= 9?`0${endMaxMonth}`:endMaxMonth}-${newDate.getDate()}`
   }
 
+  function imageChange(event){
+    setSelectImage(event.target.files[0])
+  }
+
   return(
     <Box className='create-div'>
       <NavBar/>
       <Box bg="#d9e9fa" minH="93svh" p="50px" pr="100px">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={props.type?handleEdit:handleSubmit}>
         <Flex bg="white" borderRadius="14px" direction="column" gap="20px" p="30px" w="1100px">
           <Text fontSize="28px" fontWeight="600">{!props.type?"New Hackathon Event":"Edit Event"}</Text>
           
@@ -156,7 +186,8 @@ export default function CreatePage(props){
           
           <FormControl isInvalid={err.description}>
           <FormLabel>Description</FormLabel>
-            <Textarea h="150px" 
+            <Textarea h="150px"
+              id="pre-line" 
               className="create-textarea" 
               value={formValue.description}
               placeholder="Write a description of your event to what to do in this event"
@@ -175,16 +206,25 @@ export default function CreatePage(props){
 
           <FormControl isInvalid={err.image}>
             <FormLabel>Cover Image</FormLabel>
-            <InputGroup size="md" h="80px">
+            <InputGroup size="md" h="80px" for="upload">
                 <InputLeftElement
                   ml="40px"
                   mt="20px"
                   pointerEvents="none"
-                  children={<Image src={props.data?`http://127.0.0.1:8000${props.data.image}`: selectImage?URL.createObjectURL(selectImage):upload} className="image-input-icon"/>}
+                  children={<Image src={selectImage?URL.createObjectURL(selectImage):props.type?`http://127.0.0.1:8000${eventData.image}` :upload} className="image-input-icon"/>}
                   w="65px"
+                  
                 />
                 {props.type?
-                <Input h="80px" onChange={(event)=>handleImageChange(event)} value={formValue.image} pt="20px" type='file' borderStyle="dashed" borderWidth="3px"  name="image" className="image-input"/>
+                <Flex h="80px" w="1100px" pr="40px" pt="20px" borderStyle="dashed" borderWidth="3px" borderRadius="9px" justify="space-between">
+                  <Text pl="120px">{selectImage?selectImage.name:formValue.image.split("/")[3]}</Text>
+                  {/* <label > */}
+                    {/* <span aria-hidden="true"  ><AddIcon/></span> */}
+                    <Input onChange={(event)=>imageChange(event)}  name="image" type='file' id="upload" hidden/>       
+                    <label for="upload" id="label">Reupload</label>
+                  {/* </label> */}
+                </Flex>
+                // <Input h="80px" value={eventData.image} onChange={(event)=>handleImageChange(event)} pt="20px" type='file' borderStyle="dashed" borderWidth="3px"  name="image" className="image-input"/>
                 :
                 <Input h="80px" onChange={(event)=>handleImageChange(event)} pt="20px" type='file' borderStyle="dashed" borderWidth="3px"  name="image" className="image-input"/>}
                 </InputGroup>
@@ -227,7 +267,7 @@ export default function CreatePage(props){
             <FormErrorMessage>{err.reward}</FormErrorMessage>
           </FormControl>
 
-          <Button w="200px" colorScheme="whatsapp" type="submit">Start Event</Button>
+          <Button w="200px" colorScheme="whatsapp" type="submit">{props.type?"Save":"Start Event"}</Button>
         </Flex>
         </form>
       </Box>

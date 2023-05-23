@@ -197,13 +197,14 @@ class UserHackathonListing(APIView):
   
   def patch(self, request, *args, **kwargs):
     
-    try:
+    # try:
       id=request.query_params["id"]
       # if id != None:
-      print("1")
+      # print("1")
       print(id)
       hackathon = HackathonListing.objects.select_related('creater').prefetch_related("submissions").get(id=id)
       print(hackathon)
+      print(request.data)
       data = request.data
       print(data)
       context = {
@@ -224,9 +225,11 @@ class UserHackathonListing(APIView):
 
       print("some")
       serializer.save()
-      return Response(serializer.data)
-    except:
-      return Response("No Data")
+      print('done')
+      serial = HackathonListingSerializer(hackathon)
+      return Response(serial.data, status=201)
+    # except:
+    #   return Response("No Data")
 
   def delete(self, request, *args, **kwargs):
     id = request.query_params["id"]

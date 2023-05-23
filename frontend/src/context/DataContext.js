@@ -95,7 +95,7 @@ export const DataProvider = ({children}) => {
 
     getUserHackathon: getUserHackathon,userHackathonEvent: userHackathonEvent, setUserHackathonEvent:setUserHackathonEvent,
 
-    getEventData: getEventData, eventData:eventData,
+    getEventData: getEventData, eventData:eventData, setEventData: setEventData,
   }
   return (
     <DataContext.Provider value={contextData}>{children}</DataContext.Provider>

@@ -22,9 +22,10 @@ function App() {
               {/* <Route path='new_event' element={<CreatePage />}/> */}
 
             </Route>
-            <Route exact path="/events/:eventId" element={<HackathonDetail />} />
+            <Route exact path="/events/:eventId/" element={<HackathonDetail />} />
             <Route exact path="/login" element={<MainPage />}/>
             <Route exact path="/events/new_event" element={<CreatePage />}/>
+            <Route exact path="/events/:eventId/edit/" element={<CreatePage type="edit"/>}/>
           </Routes>
         </DataProvider>
       </Router>

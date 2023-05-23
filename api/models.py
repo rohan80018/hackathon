@@ -17,7 +17,7 @@ class HackathonListing(models.Model):
   creater = models.ForeignKey(User, on_delete=models.CASCADE, related_name="creater_detail")
   title = models.CharField(max_length=25)
   summary = models.CharField(max_length=85)
-  description = models.CharField(max_length=3000)
+  description = models.TextField(max_length=3000 )
 
   image = models.ImageField(upload_to= upload_path)
 
