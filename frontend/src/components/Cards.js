@@ -4,8 +4,9 @@ import { Link } from "react-router-dom"
 
 export default function Cards({data}){
   return(
-    <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} >
+    
     <Card boxShadow="2px 2px 8px 2px rgb(182, 180, 180)"  minH="276px">
+      
       <CardHeader>
         <Flex justify="space-around">
           <Image src={`http://127.0.0.1:8000${data.image}`} boxSize="90px" borderRadius="9px"/>
@@ -29,6 +30,6 @@ export default function Cards({data}){
         </Flex>
       </CardFooter>
     </Card>
-    </Link>
+    // </Link>
   )
 }

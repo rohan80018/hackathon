@@ -5,9 +5,9 @@ import {Grid,Text, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, TabInd
   PopoverBody,
   PopoverFooter,Center,Heading,
   PopoverArrow,
-  PopoverCloseButton,
+  
   InputLeftElement,
-  InputGroup,Card, CardHeader, CardBody, CardFooter} from "@chakra-ui/react"
+  InputGroup} from "@chakra-ui/react"
 import { TriangleDownIcon, Search2Icon } from '@chakra-ui/icons'
 import { useContext, useState, useEffect } from "react"
 import DataContext from "../context/DataContext"
@@ -42,11 +42,12 @@ export default function Tablets(props) {
   }
   // console.log(userHackathonEvent)
   
-    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=><Cards data={data} key={data.id} type="submissions"/>):
-      eventData.submissions.map((data)=>(<Cards data={data} key={data.id} />))
+    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=>
+        <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} type="submissions"/></Link>):
+      eventData.submissions.map((data)=>(<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} type="submissions" key={data.id} /></Link>))
     : newest? userHackathonEvent.slice(0).reverse().map((data)=>(
-      <Cards data={data} key={data.id} />
-      )):userHackathonEvent.map((data)=>(<Cards data={data} key={data.id}/>))
+        <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} /> </Link>
+      )):userHackathonEvent.map((data)=>(<Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>))
   
   
 

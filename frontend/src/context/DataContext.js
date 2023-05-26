@@ -62,6 +62,7 @@ export const DataProvider = ({children}) => {
     setAdmin(false)
   }
 
+  // Home.js
   const [userHackathonEvent, setUserHackathonEvent] = useState({})
 
   async function getUserHackathon() {
@@ -74,6 +75,7 @@ export const DataProvider = ({children}) => {
     }
   }
 
+  // HackathonDetail.js
   const [eventData, setEventData] = useState({})
   async function getEventData(eventId){
     let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${jwt_decode(authToken.access).user_id}/?id=${eventId}`)
@@ -81,6 +83,18 @@ export const DataProvider = ({children}) => {
     console.log(data)
     if (response.status === 200){
       setEventData(data)
+    }
+  }
+
+  // SubDetail.js
+  const [subData, setSubData] = useState({})
+  async function getSubDetail(userId,subId){
+    console.log(userId, subId)
+    let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/submissions/${userId}/?id=${subId}`)
+    let data = await response.json()
+    console.log(response)
+    if (response.status === 200){
+      setSubData(data)
     }
   }
 
@@ -96,6 +110,8 @@ export const DataProvider = ({children}) => {
     getUserHackathon: getUserHackathon,userHackathonEvent: userHackathonEvent, setUserHackathonEvent:setUserHackathonEvent,
 
     getEventData: getEventData, eventData:eventData, setEventData: setEventData,
+
+    getSubDetail: getSubDetail, subData: subData, setSubData: setSubData,
   }
   return (
     <DataContext.Provider value={contextData}>{children}</DataContext.Provider>

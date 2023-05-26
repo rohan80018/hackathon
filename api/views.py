@@ -237,9 +237,11 @@ class UserHackathonListing(APIView):
     query.delete()
     return Response({"message":"Post delete"}, status=200)
 
+
+
 class SubmissionSingleList(APIView):
   def get_queryset(self):
-    submissions = Submissions.objects.select_related('user').filter(hackathon_listing=self.kwargs["pk"])
+    submissions = Submissions.objects.select_related('user').filter(user=self.kwargs["pk"])
     return submissions
 
   def get(self, request, *args, **kwargs):
@@ -247,14 +249,14 @@ class SubmissionSingleList(APIView):
       id= request.query_params['id']
       if id!=None:
         try:
-          query = Submissions.objects.select_related('user').get(id=id)
+          query = Submissions.objects.select_related('user').select_related("hackathon_listing").get(id=id)
           serializer = SubmissionDetailSerializer(query)
           return Response(serializer.data)
         except:
           return Response({"message":"No Data Found"})
     except:
       submission = self.get_queryset()
-      serializer = SubmissionDetailSerializer(submission, many=True)
+      serializer = SubSerializer(submission, many=True)
 
       return Response(serializer.data)
     

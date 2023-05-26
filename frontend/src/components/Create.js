@@ -266,7 +266,7 @@ export default function CreatePage(props){
             />
             <FormErrorMessage>{err.reward}</FormErrorMessage>
           </FormControl>
-
+          <Text fontSize="12px" as="b">*Note: Once the event starts it can't be edited</Text>
           <Button w="200px" colorScheme="whatsapp" type="submit">{props.type?"Save":"Start Event"}</Button>
         </Flex>
         </form>

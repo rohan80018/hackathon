@@ -11,6 +11,7 @@ import PrivateRoute from "./utils/PrivateRoute";
 import MainPage from "./pages/MainPage";
 import CreatePage from "./components/Create";
 import HackathonDetail from "./components/HackathonDetail";
+import SubDetail from "./components/SubDetail";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route exact path="/login" element={<MainPage />}/>
             <Route exact path="/events/new_event" element={<CreatePage />}/>
             <Route exact path="/events/:eventId/edit/" element={<CreatePage type="edit"/>}/>
+            <Route exact path="/events/:eventId/:userId/:subId/" element={<SubDetail />}/>
           </Routes>
         </DataProvider>
       </Router>

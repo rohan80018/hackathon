@@ -41,14 +41,6 @@ class FavSerializer(serializers.ModelSerializer):
     fields = ["id",'hackathon_id', "submission_id"]
 
 
-
-class SubmissionDetailSerializer(serializers.ModelSerializer):
-  user = UserSerializer(read_only=True)
-  # post= FavSerializer(many=True, read_only=False)
-  class Meta:
-    model = Submissions
-    fields = ["id", 'user','hackathon_listing',"name", "summary","description", "image", 'create_at', 'git_link', "other_link","isFav"]
-
 class HackathonListingSerializer(serializers.ModelSerializer):
   # creater = UserSerializer()
   submissions = SubSerializer(many=True,read_only=True)
@@ -66,7 +58,54 @@ class HackathonListingSerializer(serializers.ModelSerializer):
       d= instance.end_date.timestamp()
       return d *1000
   
-# not required now
+
+class SubmissionDetailSerializer(serializers.ModelSerializer):
+  user = UserSerializer(read_only=True)
+  endDate = serializers.SerializerMethodField(method_name='get_endDate_timestamp')
+  startDate = serializers.SerializerMethodField(method_name="get_startDate_timestamp")
+  name = serializers.SerializerMethodField(method_name="get_name")
+  createDate = serializers.SerializerMethodField(method_name='get_create_at')
+
+  class Meta:
+    model = Submissions
+    fields = ["id", 'user',"title", "summary","description", "image", 'createDate', 'git_link', "other_link","isFav",'hackathon_listing', "endDate", "startDate", 'name']
+
+  def get_endDate_timestamp(self, instance):
+    return instance.hackathon_listing.end_date.timestamp()*1000
+  def get_startDate_timestamp(self, instance):
+    return instance.hackathon_listing.start_date.timestamp()*1000
+  def get_name(self, instance):
+    return instance.hackathon_listing.title
+  def get_create_at(self, instance):
+    return instance.create_at.timestamp()*1000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class SubDetailSerializer(serializers.ModelSerializer):
   user = UserSerializer(read_only=True)
   post = FavSerializer(many=True, read_only=False)
