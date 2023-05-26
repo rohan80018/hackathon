@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 def upload_path(instance, filename):
   return "/".join([str(instance.title) + str(random.randint(0, 10000)), filename])
 def upload_path_submission(instance, filename):
-  return "/".join([str(instance.name) + str(random.randint(0, 10000)), filename])
+  return "/".join([str(instance.title) + str(random.randint(0, 10000)), filename])
 
 # Create your models here.
 class User(AbstractUser):

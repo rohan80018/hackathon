@@ -49,7 +49,8 @@ export default function Tablets(props) {
         <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} /> </Link>
       )):userHackathonEvent.map((data)=>(<Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>))
   
-  
+    // eventData.submissions.length&&newest?eventData.submissions.map((data)=>data.isFav&&<Cards data={data} key={data.id}/>):
+    // eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Cards data={data} key={data.id}/>)
 
   return (
     <Tabs position="relative" variant="unstyled" size="lg" w="1300px" >
@@ -117,7 +118,11 @@ export default function Tablets(props) {
               </Flex>}
             </TabPanel>
             <TabPanel>
-              
+              <Grid templateColumns='repeat(3, 1fr)' gap={9}>
+                {eventData.submissions.length&&!newest?eventData.submissions.map((data)=>data.isFav&&<Cards data={data} key={data.id}/>):
+    eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Cards data={data} key={data.id}/>)
+}
+              </Grid>
             </TabPanel>
           </TabPanels>:
           <TabPanels>

@@ -1,10 +1,11 @@
 import NavBar from "./NavBar";
 import waves from "../images/waves.png"
+import git from "../images/github-icon.png"
 import { Flex, Box, Image, Text, Button,Center,IconButton, Tooltip} from "@chakra-ui/react"
 import DataContext from "../context/DataContext";
 import {Link, useParams} from "react-router-dom"
-import {useEffect, useContext, useState} from "react"
-import { CalendarIcon, DeleteIcon, EditIcon, StarIcon } from '@chakra-ui/icons'
+import {useEffect, useContext, useState, useToast} from "react"
+import { CalendarIcon, DeleteIcon, EditIcon, StarIcon, LinkIcon } from '@chakra-ui/icons'
 
 
 export default function SubDetail(){
@@ -13,8 +14,10 @@ export default function SubDetail(){
   const params = useParams()
   const userId= params.userId
   const subId = params.subId
-  
+  const toast = useToast
+
   async function handleFav(){
+    
     let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/submissions/${userId}/?id=${subId}`,{
       method : "PATCH",
       headers : {
@@ -29,6 +32,7 @@ export default function SubDetail(){
     if (response.status === 200){
       setSubData(data)
     } 
+    
   }
   useEffect(()=>{
     getSubDetail(userId, subId)
@@ -60,8 +64,8 @@ export default function SubDetail(){
             </Flex>
             <Flex direction="column" gap="6px">
               <Text fontSize="18px" color="white" fontWeight="600">{subData.summary}</Text>
-              <Flex h="30px" align="center" justify="space-between" borderRadius="24px" gap="3px" pl={admin?"8px":"0px"} maxW="200px">
-                {admin&&<IconButton onClick={handleFav} bg="transparent" _hover={{bg:"transparent"}} icon={<StarIcon _hover={{transform:"scale(1.1)"}} color={subData.isFav?"white":"gray.400"} boxSize="6" />} />}
+              <Flex h="30px" align="center" justify="space-between" borderRadius="24px" gap="3px" maxW="200px">
+                {admin&&<IconButton  onClick={()=>handleFav()} bg="transparent" _hover={{bg:"transparent"}} icon={<StarIcon _hover={{transform:"scale(1.1)"}} color={subData.isFav?"white":"gray.400"} boxSize="6" />} />}
                 
                 {admin&&<Text pb="5px" fontSize="28px" color="gray.600">|</Text>}
               
@@ -95,15 +99,22 @@ export default function SubDetail(){
             {subData.description}
           </Text>
         </Box>
-        <Flex border={'2px solid black'} w="30%" pt="2px" pl="20px" direction="column" pr="80px">
+        <Flex  w="30%" pt="2px" pl="20px" direction="column" pr="80px">
           <Text fontSize="18px" fontWeight="500" color="gray">Hackathon</Text>
           <Text fontSize="22px" fontWeight="500">{subData.name}</Text>
           <Flex w="195px" justify="space-between" align="center">
             <CalendarIcon color="gray.500" boxSize="4" /> 
             <Text fontSize="13px" color="gray.500" fontWeight="500">{startDate} - {endDate}</Text>
           </Flex>
-          <Flex direction="column" bg="red">
-
+          <Flex direction="column" justify="space-evenly" h="150px">
+             <a href={subData.git_link} style={{width:"200px"}}>
+              <Button w="200px" variant="outline" borderColor="black" leftIcon={<Image src={git} boxSize="7"/>}>
+                GitHub Repository
+              </Button>
+            </a>
+            <a href={subData.other_link} style={{width:"200px"}}>
+              <Button w="200px" variant="outline" borderColor="black" leftIcon={<LinkIcon/>}>Other Link</Button>
+            </a>
           </Flex>
         </Flex>
       </Flex>
