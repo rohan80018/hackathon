@@ -240,6 +240,8 @@ class UserHackathonListing(APIView):
 
 
 class SubmissionSingleList(APIView):
+  serializer_class = SubSerializer
+
   def get_queryset(self):
     submissions = Submissions.objects.select_related('user').filter(user=self.kwargs["pk"])
     return submissions
@@ -267,3 +269,25 @@ class SubmissionSingleList(APIView):
     query = Submissions.objects.select_related('user').all()
     serial = SubmissionDetailSerializer(query, many=True)
     return Response(serial.data, status = 201)
+  
+  def patch(self, request, *args, **kwargs):
+    id = request.query_params["id"]
+    query = Submissions.objects.get(id=id)
+    data = request.data
+    context = {
+      "user" : query.user.id,
+      "hackathon_listing" : data.get("hackacthon_listing", query.hackathon_listing.id),
+      "title" : data.get("title", query.title),
+      "summary" : data.get("summary", query.summary),
+      "description" : data.get("description", query.description),
+      "image" : data.get("image", query.image),
+      "create_at" : query.create_at,
+      "git_link" : data.get("git_link", query.git_link),
+      "other_link" : data.get("other_link", query.other_link),
+      "isFav" : data.get("isFav", query.isFav)
+    }
+    serializer = SubSerializer(query, data = context)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    serial=SubmissionDetailSerializer(query)
+    return Response(serial.data)

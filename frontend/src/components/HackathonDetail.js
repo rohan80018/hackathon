@@ -10,14 +10,14 @@ import Tablets from "./Tabs";
 
 
 export default function HackathonDetail(){
-  let {admin, getEventData, eventData} = useContext(DataContext)
+  let {admin, getEventData, eventData, subData} = useContext(DataContext)
   const params = useParams()
   const eventId = params.eventId 
 
 
   useEffect(()=>{
     getEventData(eventId)
-  },[])
+  },[subData])
 
   if(!Object.keys(eventData)){
     return( <h1>Loading</h1>)
