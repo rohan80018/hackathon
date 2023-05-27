@@ -5,7 +5,6 @@ import {Grid,Text, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, TabInd
   PopoverBody,
   PopoverFooter,Center,Heading,
   PopoverArrow,
-  
   InputLeftElement,
   InputGroup} from "@chakra-ui/react"
 import { TriangleDownIcon, Search2Icon } from '@chakra-ui/icons'
@@ -17,9 +16,10 @@ import Cards from "./Cards"
 import { Link } from "react-router-dom"
 
 export default function Tablets(props) {
-  let{userHackathonEvent, getUserHackathon, admin, eventData} = useContext(DataContext)
+  let{setUserHackathonEvent,userHackathonEvent, getUserHackathon, admin, eventData} = useContext(DataContext)
 
   const [newest, setNewest] = useState(true)  
+  let [search,setSearch] = useState("")
   console.log(admin)
   useEffect(()=>{
     if(admin&&props.type==="admin"){
@@ -32,6 +32,18 @@ export default function Tablets(props) {
   function helll(){
     console.log(admin&&props.type==="admin"?"clicked admin sub":"cliked admin")
 
+  }
+  async function handleSearch(event){
+    if(event.key==="Enter"&&search){
+      let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/1/?search=${search}`)
+      let data= await response.json()
+      console.log(data)
+      setUserHackathonEvent(data)
+    }
+  }
+
+  function inputSearch(event){
+    setSearch(event.target.value)
   }
   
   if (props.type==="admin"&&!Object.keys(eventData).length){
@@ -77,7 +89,7 @@ export default function Tablets(props) {
                     children={<Search2Icon color="gray.400" />}
                     size="sm"
                   />
-                  <Input pb="2px" variant='filled' mt="7px" h="35px" borderRadius="24px" w="220px" placeholder={admin&&props.type==="admin"?"Search Submissions":"Search Hackathon"} />
+                  <Input pb="2px" onKeyDown={handleSearch} onChange={inputSearch} variant='filled' mt="7px" h="35px" borderRadius="24px" w="220px" placeholder={admin&&props.type==="admin"?"Search Submissions":"Search Hackathon"} />
                 </InputGroup>
                 {/* <Input  pb="2px" variant='filled' mt="7px" h="35px" borderRadius="24px" w="200px" placeholder="Search Hackathon"/> */}
                 <Popover >
@@ -129,7 +141,7 @@ export default function Tablets(props) {
                 </Flex>
               }
             </TabPanel>
-            
+
             <TabPanel>
               {(eventData.submissions.filter(data=>data.isFav===true).length)
               ?

@@ -10,6 +10,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
 from rest_framework.filters import SearchFilter
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -164,11 +165,13 @@ class Fav_create(APIView):
     return Response(query.data)
 
 
-class UserHackathonListing(APIView):
+class UserHackathonListing(GenericAPIView):
   parser_classes = (MultiPartParser, FormParser)
   serializer_class = HackathonPostSerializer
+  filter_backends=[SearchFilter]
+  search_fields=["title"]
   def get_queryset(self):
-    hackathon_listings = HackathonListing.objects.select_related('creater').filter(creater=self.kwargs["pk"])
+    hackathon_listings = self.filter_queryset(HackathonListing.objects.select_related('creater').filter(creater=self.kwargs["pk"]))
     return hackathon_listings
   
   def get(self,request, *args,**kwargs):
