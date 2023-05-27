@@ -70,8 +70,10 @@ export const DataProvider = ({children}) => {
 
     let data = await response.json()
     console.log(data)
-    if (response.status === 200){
-      setUserHackathonEvent(data)
+    if (response.status === 201){
+      Object.keys(data).length?
+      setUserHackathonEvent(data):
+      setUserHackathonEvent({message:"No events yet"})
     }
   }
 
@@ -81,7 +83,7 @@ export const DataProvider = ({children}) => {
     let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${jwt_decode(authToken.access).user_id}/?id=${eventId}`)
     let data =await response.json()
     console.log(data)
-    if (response.status === 200){
+    if (response.status === 201){
       setEventData(data)
     }
   }

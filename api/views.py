@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.filters import SearchFilter
 from rest_framework.views import APIView
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -183,7 +183,7 @@ class UserHackathonListing(APIView):
       hackathon_listing = self.get_queryset()
       serializer = HackathonPostSerializer(hackathon_listing, many=True)
       
-    return Response(serializer.data)
+    return Response(serializer.data, status=201)
 
   def post(self, request, *args, **kwargs):
     print(request.data)

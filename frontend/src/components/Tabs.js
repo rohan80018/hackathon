@@ -38,22 +38,22 @@ export default function Tablets(props) {
     return(<h1>Loading events</h1>)
   }
   else if(props.type!=="admin"&& !Object.keys(userHackathonEvent).length){
-    return (<h1>Loading submissions</h1>)
+    return (<h1>Loading event</h1>)
   }
   // console.log(userHackathonEvent)
   
-    let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=>
-        <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} type="submissions"/></Link>):
-      eventData.submissions.map((data)=>(<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} type="submissions" key={data.id} /></Link>))
-    : newest? userHackathonEvent.slice(0).reverse().map((data)=>(
-        <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} /> </Link>
-      )):userHackathonEvent.map((data)=>(<Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>))
+    // let renderData =props.type==="admin"?newest? eventData.submissions.slice(0).reverse().map((data)=>
+    //     <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} type="submissions"/></Link>):
+    //   eventData.submissions.map((data)=>(<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} type="submissions" key={data.id} /></Link>))
+    // : newest? userHackathonEvent.slice(0).reverse().map((data)=>(
+    //     <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id} /> </Link>
+    //   )):userHackathonEvent.map((data)=>(<Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>))
   
     // eventData.submissions.length&&newest?eventData.submissions.map((data)=>data.isFav&&<Cards data={data} key={data.id}/>):
     // eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Cards data={data} key={data.id}/>)
 
   return (
-    <Tabs position="relative" variant="unstyled" size="lg" w="1300px" >
+    <Tabs position="relative" variant="unstyled" size="lg" w="1300px" h="355px" >
         
         {/* {admin&&<TabList><Tab>Hackathon Events</Tab></TabList>} */}
         {/* {admin&&props.type==="admin"?
@@ -110,27 +110,73 @@ export default function Tablets(props) {
         {admin&&props.type==="admin"?
           <TabPanels>
             <TabPanel>
-              {eventData.submissions.length?<Grid templateColumns='repeat(3, 1fr)' gap={9}>
-                {renderData}
-              </Grid>:
-              <Flex justify="center" mt="40px">
-                <Text fontSize="24px">No Submissions yet</Text>
-              </Flex>}
+              {eventData.submissions.length?
+                <Grid templateColumns='repeat(3, 1fr)' gap={9}>
+                  {newest? eventData.submissions.slice(0).reverse().map((data)=>
+                    <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                      <Cards data={data} key={data.id} type="submissions"/>
+                    </Link>)
+                  :
+                  eventData.submissions.map((data)=>(
+                    <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                      <Cards data={data} type="submissions" key={data.id} />
+                    </Link>))
+                  }
+                </Grid>
+                :
+                <Flex justify="center" mt="40px">
+                  <Text fontSize="24px">No Submissions yet</Text>
+                </Flex>
+              }
             </TabPanel>
+            
             <TabPanel>
+              {(eventData.submissions.filter(data=>data.isFav===true).length)
+              ?
               <Grid templateColumns='repeat(3, 1fr)' gap={9}>
-                {eventData.submissions.length&&!newest?
-                eventData.submissions.map((data)=>data.isFav&&<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>):
-                  eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>)
+                {!newest?
+                  eventData.submissions.map((data)=>data.isFav&&
+                  <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                    <Cards data={data} key={data.id}/>
+                  </Link>)
+                :
+                eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&
+                  <Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                    <Cards data={data} key={data.id}/>
+                  </Link>)
                 }
               </Grid>
+              :
+                <Flex justify="center" mt="40px">
+                  <Text fontSize="24px">No Favourites yet</Text>
+                </Flex>
+              }
             </TabPanel>
-          </TabPanels>:
+          </TabPanels>
+        :
           <TabPanels>
             <TabPanel>
-              <Grid templateColumns='repeat(3, 1fr)' gap={9}>
-                {renderData}
-              </Grid>
+              {/* <Grid templateColumns='repeat(3, 1fr)' gap={9}> */}
+                {!userHackathonEvent.message?
+                  <Grid templateColumns='repeat(3, 1fr)' gap={9}>
+                    {newest? userHackathonEvent.slice(0).reverse().map((data)=>(
+                      <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} >
+                        <Cards data={data} key={data.id} /> 
+                      </Link>))
+                    :
+                    userHackathonEvent.map((data)=>(
+                      <Link to={`/events/${data.id}`} style={{"maxWidth":"400px"}} >
+                        <Cards data={data} key={data.id}/>
+                      </Link>))
+                    }
+                  </Grid>:
+                  <Flex justify="center" mt="40px">
+                    <Text fontSize="24px">No Events yet</Text>
+                  </Flex>
+                }
+                
+                {/* {renderData} */}
+              {/* </Grid> */}
             </TabPanel>
           </TabPanels>
         }
