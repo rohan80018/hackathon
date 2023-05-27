@@ -1,5 +1,5 @@
-import { Flex,Link , Text, Box, FormControl, FormLabel, FormErrorMessage, Input, Button} from "@chakra-ui/react"
-import { useContext,useState } from "react"
+import { Flex,Link , Text, Box, FormControl, FormLabel, FormErrorMessage, Input, Button, useToast} from "@chakra-ui/react"
+import { useContext,useRef,useState } from "react"
 import DataContext from "../context/DataContext"
 
 export default function Register({toggle}) {
@@ -16,7 +16,8 @@ export default function Register({toggle}) {
     setPassErr({})
     setValidErr({})
   }
-
+  let toast = useToast()
+  let toastIdRef = useRef()
   async function handleSubmit(event) {
     event.preventDefault()
     clearErr()
@@ -50,6 +51,13 @@ export default function Register({toggle}) {
       }else if (response.status === 201){
         clearErr()
         loginUser(event.target.username.value, event.target.password.value)
+        toastIdRef.current = toast({
+            title: 'Sucessful.',
+            description: "We've created your account for you.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          })
       }
     }else{
       setPassErr({"password":"Password don't match"})
@@ -148,7 +156,6 @@ export default function Register({toggle}) {
           type="submit"
           bg="#d8e3e8"
         //   w={[100, 300, 400]}
-      
         >
           Login
         </Button>

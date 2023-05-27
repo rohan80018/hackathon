@@ -29,10 +29,10 @@ export default function Tablets(props) {
     }
   },[])
   
-  // function sortToggle(toggle){
-  //   toggle?setNewest(true):setNewest(false)
+  function helll(){
+    console.log(admin&&props.type==="admin"?"clicked admin sub":"cliked admin")
 
-  // }
+  }
   
   if (props.type==="admin"&&!Object.keys(eventData).length){
     return(<h1>Loading events</h1>)
@@ -65,7 +65,7 @@ export default function Tablets(props) {
         <TabList>
           <Flex w="100svw">
             <Flex w="60svw">
-              <Tab>{admin&&props.type==="admin"?"All Submissions":"Hackathon Events"}</Tab>
+              <Tab onClick={helll}>{admin&&props.type==="admin"?"All Submissions":"Hackathon Events"}</Tab>
               <Tab>{admin&&props.type==="admin"?"Favourite Submissions":""}</Tab>
             </Flex>
             <Flex  justify="flex-end">
@@ -119,9 +119,10 @@ export default function Tablets(props) {
             </TabPanel>
             <TabPanel>
               <Grid templateColumns='repeat(3, 1fr)' gap={9}>
-                {eventData.submissions.length&&!newest?eventData.submissions.map((data)=>data.isFav&&<Cards data={data} key={data.id}/>):
-    eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Cards data={data} key={data.id}/>)
-}
+                {eventData.submissions.length&&!newest?
+                eventData.submissions.map((data)=>data.isFav&&<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>):
+                  eventData.submissions.slice(0).reverse().map((data)=>data.isFav&&<Link to={`/events/${eventData.id}/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} ><Cards data={data} key={data.id}/></Link>)
+                }
               </Grid>
             </TabPanel>
           </TabPanels>:

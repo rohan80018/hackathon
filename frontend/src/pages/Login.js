@@ -13,7 +13,6 @@ export default function LoginPage({toggle}) {
     loginUser(event.target.username.value,event.target.password.value)
   } 
 
-
   return(
     <Flex direction="column">
       <Box h={[61]} >
@@ -59,7 +58,6 @@ export default function LoginPage({toggle}) {
             type="submit"
             bg="#d8e3e8"
           //   w={[100, 300, 400]}
-        
           >
             Login
           </Button>

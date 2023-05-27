@@ -1,10 +1,11 @@
 import NavBar from "./NavBar";
 import waves from "../images/waves.png"
 import git from "../images/github-icon.png"
-import { Flex, Box, Image, Text, Button,Center,IconButton, Tooltip} from "@chakra-ui/react"
+import dev from "../images/dev1.png"
+import { Flex, Box, Image, Text, Button,Center,IconButton, Tooltip, useToast} from "@chakra-ui/react"
 import DataContext from "../context/DataContext";
 import {Link, useParams} from "react-router-dom"
-import {useEffect, useContext, useState, useToast} from "react"
+import {useEffect, useContext, useRef} from "react"
 import { CalendarIcon, DeleteIcon, EditIcon, StarIcon, LinkIcon } from '@chakra-ui/icons'
 
 
@@ -14,7 +15,9 @@ export default function SubDetail(){
   const params = useParams()
   const userId= params.userId
   const subId = params.subId
-  const toast = useToast
+  let toast = useToast()
+  const toastIdRef = useRef()
+
 
   async function handleFav(){
     
@@ -31,6 +34,14 @@ export default function SubDetail(){
     console.log(data)
     if (response.status === 200){
       setSubData(data)
+      toastIdRef.current = toast({
+        position: 'top',
+        title: data.isFav?"Added to Favourites":"Removed from Favourites",
+        // description: "We've created your account for you.",
+        status: data.isFav?"success":"error",
+        duration: 3000,
+        isClosable: true,
+      })
     } 
     
   }
@@ -65,7 +76,7 @@ export default function SubDetail(){
             <Flex direction="column" gap="6px">
               <Text fontSize="18px" color="white" fontWeight="600">{subData.summary}</Text>
               <Flex h="30px" align="center" justify="space-between" borderRadius="24px" gap="3px" maxW="200px">
-                {admin&&<IconButton  onClick={()=>handleFav()} bg="transparent" _hover={{bg:"transparent"}} icon={<StarIcon _hover={{transform:"scale(1.1)"}} color={subData.isFav?"white":"gray.400"} boxSize="6" />} />}
+                {admin&&<IconButton  onClick={handleFav} bg="transparent" _hover={{bg:"transparent"}} icon={<StarIcon _hover={{transform:"scale(1.1)"}} color={subData.isFav?"white":"gray.400"} boxSize="6" />} />}
                 
                 {admin&&<Text pb="5px" fontSize="28px" color="gray.600">|</Text>}
               
@@ -77,18 +88,24 @@ export default function SubDetail(){
               
             </Flex>
           </Flex>
-          <Flex w={[300]} direction="column" align="center" justify="center" gap="1rem">
-            <Link to={"#"} >
-              <Tooltip hasArrow bg="blue.400" isDisabled={true} placement='top' label="Can't edit, event already started">
-                <Button leftIcon={<EditIcon/>} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
-                  Edit
-                </Button>
+          
+            {admin?<Flex w={[300]} direction="column" align="center" justify="center">
+              <Image src={dev}/>
+              </Flex>
+            :
+            <Flex w={[300]} direction="column" align="center" justify="center" gap="1rem">
+              <Link to={"#"} >
+                <Tooltip hasArrow bg="blue.400" isDisabled={true} placement='top' label="Can't edit, event already started">
+                  <Button leftIcon={<EditIcon/>} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
+                    Edit
+                  </Button>
+                </Tooltip>
+              </Link>
+              <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! Event including submissions will be deleted">
+                <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
               </Tooltip>
-            </Link>
-            <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! Event including submissions will be deleted">
-              <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
-            </Tooltip>
-          </Flex>
+            </Flex>}
+          
         </Flex>
       </Flex>
       <Flex w="100svw" pt="20px">
@@ -107,7 +124,7 @@ export default function SubDetail(){
             <Text fontSize="13px" color="gray.500" fontWeight="500">{startDate} - {endDate}</Text>
           </Flex>
           <Flex direction="column" justify="space-evenly" h="150px">
-             <a href={subData.git_link} style={{width:"200px"}}>
+            <a href={subData.git_link} style={{width:"200px"}}>
               <Button w="200px" variant="outline" borderColor="black" leftIcon={<Image src={git} boxSize="7"/>}>
                 GitHub Repository
               </Button>

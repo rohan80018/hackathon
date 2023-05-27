@@ -1,10 +1,9 @@
-import { useState, useContext,useEffect } from "react"
+import { useState, useContext,useRef } from "react"
 import DataContext from "../context/DataContext"
 import NavBar from "./NavBar"
-import {Flex,InputGroup,IconButton, InputLeftElement,Button, Text,Input, Textarea, Image, Box, FormErrorMessage, FormControl, FormLabel,} from "@chakra-ui/react"
+import {Flex,InputGroup,useToast, InputLeftElement,Button, Text,Input, Textarea, Image, Box, FormErrorMessage, FormControl, FormLabel,} from "@chakra-ui/react"
 import upload from "../images/upload.png"
 import {useNavigate} from "react-router-dom";
-import { AddIcon } from "@chakra-ui/icons"
 
 export default function CreatePage(props){
   let {setUserHackathonEvent,user, eventData, setEventData} = useContext(DataContext)
@@ -32,6 +31,19 @@ export default function CreatePage(props){
     "reward":""
   })
 
+  let toast = useToast()
+  const toastIdRef = useRef()
+
+  function addToast(type){
+    toastIdRef.current = toast({
+      title: type==="create"?'Event Created.':"Event Edited",
+      // description: "We've created your account for you.",
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    })
+  }
+
   const formData = new FormData()
   async function handleSubmit(event){
     event.preventDefault()
@@ -54,11 +66,15 @@ export default function CreatePage(props){
       }
     }else if (response.status===201){
       setUserHackathonEvent(data)
+      addToast("create")
       setTimeout(()=>{
         navigate("/events")
-      },500)
+      },100)
     }
   }
+
+  
+
   async function handleEdit(event){
     event.preventDefault()
     // console.log(formValue)
@@ -84,9 +100,10 @@ export default function CreatePage(props){
       }
     }else if (response.status===201){
       setEventData(data)
+      addToast("edit")
       setTimeout(()=>{
         navigate(`/events/${data.id}`)
-      },500)
+      },100)
     }
   }
 
@@ -152,7 +169,7 @@ export default function CreatePage(props){
   function imageChange(event){
     setSelectImage(event.target.files[0])
   }
-
+  
   return(
     <Box className='create-div'>
       <NavBar/>
@@ -267,7 +284,7 @@ export default function CreatePage(props){
             <FormErrorMessage>{err.reward}</FormErrorMessage>
           </FormControl>
           <Text fontSize="12px" as="b">*Note: Once the event starts it can't be edited</Text>
-          <Button w="200px" colorScheme="whatsapp" type="submit">{props.type?"Save":"Start Event"}</Button>
+          <Button  w="200px" colorScheme="whatsapp" type="submit">{props.type?"Save":"Start Event"}</Button>
         </Flex>
         </form>
       </Box>
