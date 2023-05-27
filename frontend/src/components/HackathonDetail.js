@@ -1,23 +1,51 @@
 import NavBar from "./NavBar";
 import waves from "../images/waves.png"
-import { Flex, Box, Image, Text, Button,Center, Tooltip} from "@chakra-ui/react"
+import { Flex, Box, Image, Text, Button,Center, Tooltip,useToast} from "@chakra-ui/react"
 import DataContext from "../context/DataContext";
-import {Link, useParams} from "react-router-dom"
-import {useEffect, useContext, useState} from "react"
+import {Link, useParams, useNavigate} from "react-router-dom"
+import {useEffect, useContext, useState,useRef} from "react"
 import { CalendarIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import Tablets from "./Tabs";
+import DialogModal from "./DialogModal";
+import jwt_decode from 'jwt-decode'
 
 
 
 export default function HackathonDetail(){
-  let {admin, getEventData, eventData, subData} = useContext(DataContext)
+  let {admin, getEventData,setUserHackathonEvent, eventData, subData, authToken} = useContext(DataContext)
   const params = useParams()
   const eventId = params.eventId 
-
+  let navigate= useNavigate()
 
   useEffect(()=>{
     getEventData(eventId)
   },[subData])
+
+  let toast = useToast()
+  const toastIdRef = useRef()
+
+  async function onDelete(){
+    let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${jwt_decode(authToken.access).user_id}/?id=${eventId}`,{
+      method:"DELETE",
+      
+    })
+    let data = await response.json()
+    if (response.status === 201){
+      setUserHackathonEvent(data)
+      toastIdRef.current = toast({
+        title: "Event Deleted",
+        position:"top",
+        // description: "We've created your account for you.",
+        status: 'success',
+        duration: 7000,
+        isClosable: true,
+      })
+      setTimeout(()=>{
+        navigate("/events")
+      },1000)
+    }
+
+  }
 
   if(!Object.keys(eventData)){
     return( <h1>Loading</h1>)
@@ -61,7 +89,7 @@ export default function HackathonDetail(){
               </Tooltip>
             </Link>
             <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! Event including submissions will be deleted">
-              <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
+              <DialogModal type="event" onDelete={onDelete}/>
             </Tooltip>
           </Flex>
         </Flex>

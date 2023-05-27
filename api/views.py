@@ -235,7 +235,9 @@ class UserHackathonListing(APIView):
     id = request.query_params["id"]
     query = HackathonListing.objects.get(id=id)
     query.delete()
-    return Response({"message":"Post delete"}, status=200)
+    hackathon_listing = self.get_queryset()
+    serial = HackathonPostSerializer(hackathon_listing, many=True)
+    return Response(serial.data, status=201)
 
 
 
