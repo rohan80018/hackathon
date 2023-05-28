@@ -12,6 +12,7 @@ urlpatterns = [
   path('listings/<int:pk>/', views.UserHackathonListing.as_view()),
   path('listings/submissions/<int:pk>/', views.SubmissionSingleList.as_view()),
 
+  path('submissions/search/<int:pk>/', views.SubmissionsSearchListings.as_view()),
 
   path('submissions', views.SubmissionList.as_view()),
   # path("submissions/<int:pk>", views.sub_detail), not needed

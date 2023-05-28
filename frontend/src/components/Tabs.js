@@ -6,7 +6,10 @@ import {Grid,Text, Button, Flex, Tabs, TabList, TabPanels, Tab, TabPanel, TabInd
   PopoverFooter,Center,Heading,
   PopoverArrow,
   InputLeftElement,
-  InputGroup} from "@chakra-ui/react"
+  InputGroup,
+  InputRightElement,
+  Icon,
+  CloseButton} from "@chakra-ui/react"
 import { TriangleDownIcon, Search2Icon } from '@chakra-ui/icons'
 import { useContext, useState, useEffect } from "react"
 import DataContext from "../context/DataContext"
@@ -16,7 +19,7 @@ import Cards from "./Cards"
 import { Link } from "react-router-dom"
 
 export default function Tablets(props) {
-  let{setUserHackathonEvent,userHackathonEvent, getUserHackathon, admin, eventData} = useContext(DataContext)
+  let{setUserHackathonEvent,user,userHackathonEvent,getEventData, getUserHackathon, admin,setEventData, eventData} = useContext(DataContext)
 
   const [newest, setNewest] = useState(true)  
   let [search,setSearch] = useState("")
@@ -34,12 +37,29 @@ export default function Tablets(props) {
 
   }
   async function handleSearch(event){
-    if(event.key==="Enter"&&search){
-      let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/1/?search=${search}`)
+    if(search&&event.key==="Enter"&&props.type==="admin"){
+      let response = await fetch(`http://127.0.0.1:8000/hackathon/submissions/search/${eventData.id}/?search=${search}`)
       let data= await response.json()
-      console.log(data)
-      setUserHackathonEvent(data)
+      if (response.status===201){
+        setEventData((prev)=>{
+          return ({...prev, submissions:data})
+        })
+      }
     }
+    else if(event.key==="Enter"&&search){
+      let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${user.user_id}/?search=${search}`)
+      let data= await response.json()
+      if (response.status===201){
+        Object.keys(data).length?
+        setUserHackathonEvent(data):
+        setUserHackathonEvent({message:"No Events"})
+      }
+    }
+  }
+  function cancelSearch(){
+    setSearch("")
+    props.type==="admin"?getEventData(eventData.id):getUserHackathon()
+    
   }
 
   function inputSearch(event){
@@ -47,7 +67,7 @@ export default function Tablets(props) {
   }
   
   if (props.type==="admin"&&!Object.keys(eventData).length){
-    return(<h1>Loading events</h1>)
+    return(<h1>Loading submissions</h1>)
   }
   else if(props.type!=="admin"&& !Object.keys(userHackathonEvent).length){
     return (<h1>Loading event</h1>)
@@ -80,16 +100,25 @@ export default function Tablets(props) {
               <Tab onClick={helll}>{admin&&props.type==="admin"?"All Submissions":"Hackathon Events"}</Tab>
               <Tab>{admin&&props.type==="admin"?"Favourite Submissions":""}</Tab>
             </Flex>
-            <Flex  justify="flex-end">
-              <Flex w="23svw" justify={"space-between"}>
+            {/* <Flex bg="red" justify="space-between"> */}
+              <Flex w="25svw"  justify="space-between" >
                 <InputGroup size="md">
                   <InputLeftElement
                     mt="4px"
                     pointerEvents="none"
                     children={<Search2Icon color="gray.400" />}
-                    size="sm"
+                    size="md"
                   />
-                  <Input pb="2px" onKeyDown={handleSearch} onChange={inputSearch} variant='filled' mt="7px" h="35px" borderRadius="24px" w="220px" placeholder={admin&&props.type==="admin"?"Search Submissions":"Search Hackathon"} />
+                  {search?<InputRightElement
+                    mt="4px"
+                    mr="20px"
+                    children={<CloseButton onClick={cancelSearch} size="md" color="gray.600"/>}
+                  />:""}
+                  
+                    {/* <CloseButton/> */}
+                    
+                  {/* </InputRightElement> */}
+                  <Input pb="2px" onKeyDown={handleSearch} onChange={inputSearch} value={search} variant='filled' mt="7px" h="35px" borderRadius="24px" w="265px" placeholder={admin&&props.type==="admin"?"Search Submissions":"Search Hackathon"} />
                 </InputGroup>
                 {/* <Input  pb="2px" variant='filled' mt="7px" h="35px" borderRadius="24px" w="200px" placeholder="Search Hackathon"/> */}
                 <Popover >
@@ -109,7 +138,7 @@ export default function Tablets(props) {
                   </PopoverContent>
                 </Popover>
               </Flex>
-            </Flex>
+            {/* </Flex> */}
           </Flex>
         </TabList>
 
@@ -183,7 +212,7 @@ export default function Tablets(props) {
                     }
                   </Grid>:
                   <Flex justify="center" mt="40px">
-                    <Text fontSize="24px">No Events yet</Text>
+                    <Text fontSize="24px">{userHackathonEvent.message}</Text>
                   </Flex>
                 }
                 

@@ -171,7 +171,7 @@ class UserHackathonListing(GenericAPIView):
   filter_backends=[SearchFilter]
   search_fields=["title"]
   def get_queryset(self):
-    hackathon_listings = self.filter_queryset(HackathonListing.objects.select_related('creater').filter(creater=self.kwargs["pk"]))
+    hackathon_listings = self.filter_queryset(HackathonListing.objects.select_related('creater').prefetch_related("submissions").filter(creater=self.kwargs["pk"]))
     return hackathon_listings
   
   def get(self,request, *args,**kwargs):
@@ -244,11 +244,13 @@ class UserHackathonListing(GenericAPIView):
 
 
 
-class SubmissionSingleList(APIView):
+class SubmissionSingleList(GenericAPIView):
   serializer_class = SubSerializer
+  filter_backends=[SearchFilter]
+  search_fields=["title"]
 
   def get_queryset(self):
-    submissions = Submissions.objects.select_related('user').filter(user=self.kwargs["pk"])
+    submissions = self.filter_queryset(Submissions.objects.select_related('user').filter(user=self.kwargs["pk"]))
     return submissions
 
   def get(self, request, *args, **kwargs):
@@ -296,3 +298,19 @@ class SubmissionSingleList(APIView):
     serializer.save()
     serial=SubmissionDetailSerializer(query)
     return Response(serial.data)
+  
+
+class SubmissionsSearchListings(GenericAPIView):
+  serializer_class = SubSerializer
+  filter_backends=[SearchFilter]
+  search_fields=["title"]
+
+  def get_queryset(self):
+    submissions = self.filter_queryset(Submissions.objects.select_related('user').prefetch_related("hackathon_listing").filter(hackathon_listing=self.kwargs["pk"]))
+    return submissions
+  
+  def get(self, request, *args, **kwargs):
+    submission = self.get_queryset()
+    serializer = SubSerializer(submission, many=True)
+
+    return Response(serializer.data, status=201)
