@@ -17,7 +17,7 @@ export default function HomePage() {
     <>
       <NavBar />
       <Flex minH="300px" bg="#003145" backgroundImage={waves} >
-        {admin?
+        
         <Flex  w="100svw" justify="space-around">
           <Flex w={[800]} pl="80px" pr="20px" pb="8px" direction="column" justify='space-evenly'>
             <Text fontSize="50px" color="white" fontWeight={700} fontFamily="Bahnschrift">
@@ -29,13 +29,13 @@ export default function HomePage() {
               nisl tempus nec vitae.
             </Text>
             
-            <Link className="link-create" to="/events/new_event"><Button  size="md" w="120px" colorScheme='green'>Create Event</Button></Link> 
+            {admin?<Link className="link-create" to="/events/new_event"><Button  size="md" w="120px" colorScheme='green'>Create Event</Button></Link>:""} 
           </Flex>
           <Box w={[300]}>
             <Image  src={idea}/>
           </Box>
         </Flex>
-        :<h1>jkw</h1>}
+        
       </Flex>
       {/* <Flex bg="red" h="390px" direction="column">
         <Flex h="15%" bg="blue">
@@ -46,7 +46,7 @@ export default function HomePage() {
         </Grid>
       </Flex> */}
       <Flex w="100svw" justify="center" h="390px">
-        {admin?<Tablets/>:""}
+        {admin?<Tablets/>:<Tablets type={"submission"}/>}
       </Flex>
       
     </>

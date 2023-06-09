@@ -28,6 +28,7 @@ function App() {
             <Route exact path="/events/new_event" element={<CreatePage />}/>
             <Route exact path="/events/:eventId/edit/" element={<CreatePage type="edit"/>}/>
             <Route exact path="/events/:eventId/:userId/:subId/" element={<SubDetail />}/>
+            <Route exact path="/submission/:userId/:subId/" element={<SubDetail />}/>
           </Routes>
         </DataProvider>
       </Router>

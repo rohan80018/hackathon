@@ -77,6 +77,19 @@ export const DataProvider = ({children}) => {
     }
   }
 
+  const [userSub, setUserSub] = useState({})
+
+  async function getUserSubmissions(){
+    let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/submissions/${jwt_decode(authToken.access).user_id}`)
+
+    let data = await response.json()
+    if (response.status === 200){
+      Object.keys(data).length?
+      setUserSub(data):
+      setUserSub({message:"No submissions yet"})
+    }
+  }
+
   // HackathonDetail.js
   const [eventData, setEventData] = useState({})
   async function getEventData(eventId){
@@ -114,6 +127,8 @@ export const DataProvider = ({children}) => {
     getEventData: getEventData, eventData:eventData, setEventData: setEventData,
 
     getSubDetail: getSubDetail, subData: subData, setSubData: setSubData,
+
+    userSub: userSub, setUserSub: setUserSub, getUserSubmissions: getUserSubmissions,
   }
   return (
     <DataContext.Provider value={contextData}>{children}</DataContext.Provider>

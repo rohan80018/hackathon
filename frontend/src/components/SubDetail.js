@@ -49,6 +49,8 @@ export default function SubDetail(){
     getSubDetail(userId, subId)
   },[])
 
+  const now = new Date().getTime()
+  console.log(now)
   let date = new Date(subData.createDate)
   let createDate = date.toDateString().slice(3)
 
@@ -95,13 +97,13 @@ export default function SubDetail(){
             :
             <Flex w={[300]} direction="column" align="center" justify="center" gap="1rem">
               <Link to={"#"} >
-                <Tooltip hasArrow bg="blue.400" isDisabled={true} placement='top' label="Can't edit, event already started">
+                <Tooltip hasArrow bg="blue.400" isDisabled={now >= subData.endDate ? false:true} placement='top' label="Can't edit, event already ended">
                   <Button leftIcon={<EditIcon/>} w="100px" borderWidth="2px" fontWeight="700" variant='outline' colorScheme="blue" >
                     Edit
                   </Button>
                 </Tooltip>
               </Link>
-              <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! Event including submissions will be deleted">
+              <Tooltip hasArrow bg="red.300" placement='bottom' label="Warning ! This submission will be deleted">
                 <Button leftIcon={<DeleteIcon/>} w="100px" borderWidth="2px" fontWeight="700" colorScheme="red" variant='outline'>Delete</Button>
               </Tooltip>
             </Flex>}
@@ -122,7 +124,9 @@ export default function SubDetail(){
           <Flex w="195px" justify="space-between" align="center">
             <CalendarIcon color="gray.500" boxSize="4" /> 
             <Text fontSize="13px" color="gray.500" fontWeight="500">{startDate} - {endDate}</Text>
+            <br></br>
           </Flex>
+          {admin&& <Text fontSize="14px" color="gray.500" fontWeight="500">Submitted by: <span>{subData.user.username}</span></Text>}
           <Flex direction="column" justify="space-evenly" h="150px">
             <a href={subData.git_link} style={{width:"200px"}}>
               <Button w="200px" variant="outline" borderColor="black" leftIcon={<Image src={git} boxSize="7"/>}>

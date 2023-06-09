@@ -19,16 +19,20 @@ import Cards from "./Cards"
 import { Link } from "react-router-dom"
 
 export default function Tablets(props) {
-  let{setUserHackathonEvent,user,userHackathonEvent,getEventData, getUserHackathon, admin,setEventData, eventData} = useContext(DataContext)
+  let {
+    setUserHackathonEvent,userHackathonEvent,getEventData, 
+    getUserHackathon, setEventData, eventData,
+    userSub, setUserSub, getUserSubmissions,
+    user, admin} = useContext(DataContext)
 
   const [newest, setNewest] = useState(true)  
   let [search,setSearch] = useState("")
   console.log(admin)
   useEffect(()=>{
-    if(admin&&props.type==="admin"){
-      // "submissions()"
-    }else if(admin){
+    if(admin){
       getUserHackathon()
+    }else if(props.type==="submission"){
+      getUserSubmissions()
     }
   },[])
   
@@ -46,7 +50,7 @@ export default function Tablets(props) {
         })
       }
     }
-    else if(event.key==="Enter"&&search){
+    else if(event.key==="Enter"&&admin&&search){
       let response = await fetch(`http://127.0.0.1:8000/hackathon/listings/${user.user_id}/?search=${search}`)
       let data= await response.json()
       if (response.status===201){
@@ -69,8 +73,10 @@ export default function Tablets(props) {
   if (props.type==="admin"&&!Object.keys(eventData).length){
     return(<h1>Loading submissions</h1>)
   }
-  else if(props.type!=="admin"&& !Object.keys(userHackathonEvent).length){
+  else if(admin&&props.type!=="admin"&& !Object.keys(userHackathonEvent).length){
     return (<h1>Loading event</h1>)
+  }else if(props.type==="submission"&& !Object.keys(userSub).length){
+    return (<h1>Loading subs</h1>)
   }
   // console.log(userHackathonEvent)
   
@@ -96,10 +102,24 @@ export default function Tablets(props) {
         :<TabList><Tab>Hackathon Events</Tab></TabList>} */}
         <TabList>
           <Flex w="100svw">
-            <Flex w="60svw">
-              <Tab onClick={helll}>{admin&&props.type==="admin"?"All Submissions":"Hackathon Events"}</Tab>
-              <Tab>{admin&&props.type==="admin"?"Favourite Submissions":""}</Tab>
-            </Flex>
+            {/* <Flex w="60svw"> */}
+              {admin&&props.type==="admin"&&<Flex w="60svw">
+                <Tab>All Submissions</Tab>
+                <Tab>Favourite Submissions</Tab>
+              </Flex>}
+
+              {admin&&props.type!=="admin"&& <Flex w="60svw">
+                <Tab>Hackathon Events</Tab>
+              </Flex>}
+
+              {props.type==="submission"&&<Flex w="60svw">
+                <Tab>All Events</Tab>
+                <Tab>Registered Events</Tab>
+                <Tab>My Submissions</Tab>
+              </Flex>}
+              {/* <Tab onClick={helll}>{admin&&props.type==="admin"?"All Submissions":"Hackathon Events"}</Tab>
+              <Tab>{admin&&props.type==="admin"?"Favourite Submissions":""}</Tab> */}
+            {/* </Flex> */}
             {/* <Flex bg="red" justify="space-between"> */}
               <Flex w="25svw"  justify="space-between" >
                 <InputGroup size="md">
@@ -195,6 +215,36 @@ export default function Tablets(props) {
             </TabPanel>
           </TabPanels>
         :
+        props.type==="submission"?
+        <TabPanels>
+          <TabPanel>
+            1no panner;
+          </TabPanel>
+          <TabPanel>
+            2no panel
+          </TabPanel>
+          <TabPanel>
+            {!userSub.message?
+              <Grid templateColumns="repeat(3, 1fr)" gap="9">
+                {newest? userSub.slice(0).reverse().map((data)=>(
+                  <Link to={`/submission/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                    <Cards data={data} key={data.id} /> 
+                  </Link>))
+                :
+                userSub.map((data)=>(
+                  <Link to={`/submission/${data.user}/${data.id}`} style={{"maxWidth":"400px"}} >
+                    <Cards data={data} key={data.id}/>
+                  </Link>))
+                }
+              </Grid>:
+              <Flex justify="center" mt="40px">
+                <Text fontSize="24px">{userSub.message}</Text>
+              </Flex>
+            }
+          </TabPanel>
+        </TabPanels>
+        :
+
           <TabPanels>
             <TabPanel>
               {/* <Grid templateColumns='repeat(3, 1fr)' gap={9}> */}
